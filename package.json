@@ -1,0 +1,11 @@
+{
+  "name": "nmiu",
+  "version": "1.0.0",
+  "description": "音乐软件桌面端",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "nebulau",
+  "license": "ISC"
+}

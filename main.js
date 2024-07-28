@@ -1,34 +1,22 @@
 const {app, BrowserWindow} = require('electron')
-const net = require('net')
 const config = require('./config.json')
+const userData = require('./userData/userData.json')
+const cli = require('./modules/client')
+const icd = require('./modules/icd')
+const status = require('./modules/status')
 
+/********************* 全局变量 *********************/
 const serverHost = config['server-host'];
 const serverPort = config['server-port'];
-const client = new net.Socket();
+const sessionId = userData['session-id'];
 
-let clientToServer001 = {
-    operation : 0,      // 0=无效；1=请求登录状态；2=获取登录二维码；
-    param1: "value1",
-    param2: "value2",
-    param3: "value3",
-    param4: "value4",
-}
 
-client.connect(serverPort, serverHost, ()=>{
-    clientToServer001.operation = 1;
-    let jsonData = JSON.stringify(clientToServer001);
-    client.write(jsonData);
-})
-
-client.on('data', (data) => {
-    console.log(data)
-})
 
 function createLoginWindow(params) {
     let mainWin = new BrowserWindow({
         show: false,
-        width: 320,
-        height: 450,
+        width: 1000,
+        height: 700,
         webPreerences:{
             nodeIntegration:true,
             enableRemoteModule: true
@@ -41,4 +29,18 @@ function createLoginWindow(params) {
     mainWin.loadFile('./index.html');
 }
 
-app.on('ready', createLoginWindow);
+function login() {
+    // 先请求会话状态
+    icd.clientToServer001.operation = "get_session_status";
+    icd.clientToServer001.sessionId = sessionId;
+    cli.client.write(JSON.stringify(icd.clientToServer001));
+    status.isRequestLogin = true;
+}
+
+function start(){
+    cli.connect(serverPort, serverHost);
+    login();
+}
+
+
+app.on('ready', start);

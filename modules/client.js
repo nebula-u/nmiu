@@ -3,35 +3,37 @@ const status = require('./status')
 
 const client = new net.Socket();
 
-function connect(port, host) {
-    client.connect(port, host, ()=>{
-        status.connectStatus = true;
-        console.log('connect success')
-    })
-    
-    client.on('data', (data) => {
-        status.isRequestLogin = false;
-        const root = JSON.parse(data.toString('utf-8'));
-        if("loginStatus" === root.type)
-        {
-            if("1" === root.result)
-            {
-                console.log("login success");
-                console.log(root.newSessionid);
-            }
-            else if("0" === root.result)
-            {
-                console.log("relogin required");
-            }
-        }
-    })
-    
-    client.on('error', (error) => {
-        console.log(error);
-    })
+async function ConnectToServer(port, host) {
+    return new Promise((resolve, reject)=>{
+        client.connect(port, host, ()=>{
+            resolve(true);
+        });
+        client.on('error', (err)=>{
+            reject(err);
+        });
+    });
+}
+
+
+
+async function SendRequest(requestData) {
+    return new Promise((resolve, reject)=>{
+        client.write(requestData);
+
+        client.on('data', (data)=>{
+            resolve(data.toString());
+        });
+        client.on('error', (err)=>{
+            reject(err);
+        });
+        client.on('close', ()=>{
+            console.log("connection closed!!!");
+        });
+    });
 }
 
 module.exports = {
-    connect,
+    ConnectToServer,
+    SendRequest,
     client
 }

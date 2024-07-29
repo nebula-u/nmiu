@@ -1,0 +1,146 @@
+body {
+    margin: 0px;
+    background-image: url('../icon/background.jpg');
+    background-size: 320px, 450px;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.title-bar {
+    height: 25px;
+    background-color: transparent;
+    user-select: none;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: left;
+}
+
+.drag {
+    flex: 1;
+    -webkit-app-region: drag;
+    background-color: transparent;
+}
+
+.close {
+    width: 25px;
+    background-color: transparent;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 0 0 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.close:hover {
+    background-color: rgb(230, 120, 120);
+}
+
+#login-area {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 365px;
+}
+
+.head {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 120px;
+    /* background-color: rgb(45, 46, 46); */
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.head img{
+    height: 80px;
+    width: 80px;
+    border-radius: 40px;
+}
+
+#uid{
+    margin: 0px 30px 10px 30px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background-color:rgb(207, 207, 207, 0.3);
+    color: white;
+    font-size: medium;
+    text-align: center;
+    outline: none;
+}
+
+#uid::placeholder{
+    color: white;
+}
+
+#uid:focus::placeholder{
+    opacity: 0;
+}
+
+#password{
+    margin: 0px 30px 20px 30px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background-color:rgb(207, 207, 207, 0.3);
+    color: white;
+    font-size: medium;
+    text-align: center;
+    outline: none;
+}
+
+#password::placeholder{
+    color: white;
+}
+
+#password:focus::placeholder{
+    opacity: 0;
+}
+
+#remeber-password {
+    height: 16px;
+    margin: 0px 0px 25px 30px;
+    font-size: small;
+    color: bisque;
+    line-height: 16px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#login {
+    margin: 0px 30px 20px 30px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background-color:rgb(3, 127, 222);
+    color: white;
+    outline: none;
+    cursor: pointer;
+}
+
+#more-opration{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: small;
+}
+
+#forget-password {
+    margin-right: 10px;
+}
+
+#register{
+    margin-left: 10px;
+}

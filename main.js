@@ -35,6 +35,7 @@ function createMainWindow() {
         show: false,
         width: 1000,
         height: 700,
+        frame: false,
         webPreerences: {
             nodeIntegration: true,
             enableRemoteModule: true
@@ -43,28 +44,26 @@ function createMainWindow() {
     mainWin.once('ready-to-show', () => {
         mainWin.show();
     });
-
-    mainWin.loadFile('./main.html');
+    mainWin.loadFile('./static/html/main.html');
 }
 
-async function login() {
-    // 先请求会话状态
-    icd.clientToServer001.operation = "get_session_status";
-    icd.clientToServer001.sessionId = sessionId;
-    const response = await cli.SendRequest(JSON.stringify(icd.clientToServer001));
-    const res = JSON.parse(response);
-    if ("loginStatus" === res.type) {
-        if ("1" === res.result) {
-            console.log("login success");
-            console.log(res.newSessionid);
-            createMainWindow();
-        }
-        else if ("0" === res.result) {
-            console.log("relogin required");
-            createLoginWindow();
-        }
-    }
-}
+// async function login() {
+//     icd.clientToServer001.operation = "get_session_status";
+//     icd.clientToServer001.sessionId = sessionId;
+//     const response = await cli.SendRequest(JSON.stringify(icd.clientToServer001));
+//     const res = JSON.parse(response);
+//     if ("loginStatus" === res.type) {
+//         if ("1" === res.result) {
+//             console.log("login success");
+//             console.log(res.newSessionid);
+//             createMainWindow();
+//         }
+//         else if ("0" === res.result) {
+//             console.log("relogin required");
+//             createLoginWindow();
+//         }
+//     }
+// }
 
 async function start() {
     try {
@@ -74,7 +73,7 @@ async function start() {
     catch (error) {
         console.log("reqest error: " + error)
     }
-    login();
+    createMainWindow();
 }
 
 

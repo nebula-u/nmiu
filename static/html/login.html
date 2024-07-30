@@ -10,14 +10,11 @@
 <body id="app">
     <div id="title-bar" class="title-bar">
         <div class="drag"></div>
-        <div class="close" @click="closeEvent">
-            <img src="./icon/close.svg" alt="关闭" style="height: 10px; width: 10px;">
+        <div class="close" @click="closeWin">
+            <img src="../icon/close.svg" alt="关闭" style="height: 10px; width: 10px;">
         </div>
     </div>
     <div id="login-area">
-        <div id="head" class="head">
-            <img src="./icon/head.svg" alt="">
-        </div>
         <input type="text" id="uid" placeholder="输入用户名" v-model="uid">
         <input type="password" id="password" placeholder="输入密码" v-model="password">
         <div id="remeber-password">
@@ -30,6 +27,6 @@
         <div id="register">注册账号</div>
     </div>
 
-    <script src="./JavaScript/index.js"></script>
+    <script src="../javascript/login.js"></script>
 </body>
 </html>

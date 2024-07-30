@@ -1,17 +1,19 @@
 var clientToServer001 = {
     operation : "",      // 操作指令
     sessionId: "",
-    id: "",
+    uid: "",
     username: "",
     password: "",
 }
 
 var serverToclient001 = {
-    type : "",      // 操作指令
+    type : "",
     result: "",
+    username: "",
     newSessionid: "",
 }
 
 module.exports = {
-    clientToServer001
+    clientToServer001,
+    serverToclient001
 }

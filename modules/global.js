@@ -1,9 +1,13 @@
 var loginStatus = false;
 var connectStatus = false;
 var isRequestLogin = false;
+var sessionId = "";
+var mainWindow;
 
-module.export = {
+module.exports = {
     loginStatus,
     connectStatus,
-    isRequestLogin
+    isRequestLogin,
+    sessionId,
+    mainWindow
 }

@@ -1,0 +1,110 @@
+#app {
+    background: linear-gradient(to bottom, #e1b7fd, #ffffff);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.menu{
+    width: 240px;
+    height: 100vh;
+    background-color: aqua;
+}
+
+.main-content {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.main-content .window-controls{
+    height: 30px;
+    background-color: transparent;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.search {
+    flex: 1;
+    background-color: white;
+}
+
+.login-status {
+    width: 120px;
+    background-color: transparent;
+    line-height: 30px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-name {
+    text-align: center;
+    font-size: small;
+    cursor: pointer;
+}
+
+.head{
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.cloud-service {
+    width: 120px;
+    background-color: beige;
+}
+
+.win-ctrl {
+    width: 150px;
+    background-color: transparent;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    line-height: 30px;
+}
+
+.minWindow{
+    flex: 1;
+    text-align: center; /*左右居中*/
+    transition: background-color 0.3s;
+}
+
+.maxWindow{
+    flex: 1;
+    text-align: center; /*左右居中*/
+    transition: background-color 0.3s;
+}
+
+.closeWindow{
+    flex: 1;
+    text-align: center; /*左右居中*/
+    transition: background-color 0.3s;
+}
+
+.minWindow:hover {
+    background-color: rgb(190, 190, 190);
+}
+
+.maxWindow:hover {
+    background-color: rgb(190, 190, 190);
+}
+
+.closeWindow:hover {
+    background-color: rgb(255, 95, 95);
+}
+
+.win-ctrl img{
+    height: 15px;
+    width: 15px;
+}

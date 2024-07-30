@@ -6,7 +6,34 @@
     <script src="../plugin/vue/vue.global.js"></script>
     <link rel="stylesheet" href="../css/main.css">
 </head>
-<body>
-    
+<body style="margin: 0px;">
+    <div id="app">
+        <div class="menu">
+
+        </div>
+        <div class="main-content">
+            <div class="window-controls">
+                <div class="search"></div>
+                <div class="login-status">
+                    <img src="../img/defaluthead.svg" class="head" @click="openUserInfo" alt="">
+                    <div class="user-name" @click="openUserInfo" >{{uname_}}</div>
+                </div>
+                <div class="cloud-service"></div>
+                <div class="win-ctrl">
+                    <div class="minWindow" @click="minWin">
+                        <img src="../icon/minWindow.svg" alt="" srcset="">
+                    </div>
+                    <div class="maxWindow" @click="maxWin">
+                        <img src="../icon/maxWindow.svg" alt="" srcset="">
+                    </div>
+                    <div class="closeWindow" @click="closeWin">
+                        <img src="../icon/close.svg" alt="" srcset="">
+                    </div>
+                </div>
+            </div>
+            <div class="content"></div>
+        </div>
+    </div>
+    <script src="../javascript/main.js"></script>
 </body>
 </html>

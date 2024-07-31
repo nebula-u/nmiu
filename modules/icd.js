@@ -13,7 +13,25 @@ var serverToclient001 = {
     newSessionid: "",
 }
 
+var ipcLoginResult = {
+    result: "",
+    uid: "",
+    username: "",
+    gender: "",
+    area: "",
+    headlink: "",
+}
+
+var ipcPanStatusResult = {
+    result: "",
+    username: "",
+    headlink: "",
+    QRCodeUrl: "",
+}
+
 module.exports = {
     clientToServer001,
-    serverToclient001
+    serverToclient001,
+    ipcLoginResult,
+    ipcPanStatusResult
 }

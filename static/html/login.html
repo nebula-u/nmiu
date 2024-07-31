@@ -18,7 +18,9 @@
         <input type="text" id="uid" placeholder="输入用户名" v-model="uid">
         <input type="password" id="password" placeholder="输入密码" v-model="password">
         <div id="remeber-password">
-            <input type="checkbox" name="" id=""><div> 记住密码</div>
+            <input type="checkbox" name="" class="remeber-password-select">
+            <div class="remeber-password-discribe">记住密码</div>
+            <div class="login-result">{{loginResult_}}</div>
         </div>
         <button id="login" @click="login">登 录</button>
     </div>

@@ -2,47 +2,58 @@ const { createApp } = Vue;
 const { remote, ipcRenderer } = require('electron');
 
 var isLoggedIn = false;
+var isAuthed = false;
 
 const app = createApp({
-    data(){
+    data() {
         return {
-            uname_: "登录"
+            uname_: "登录",
+            cloudStatus_: "未授权"
         }
     },
-    methods:{
-        closeWin(){
+    methods: {
+        closeWin() {
             const mainWin = remote.getCurrentWindow();
             mainWin.close();
         },
 
-        openUserInfo(){
+        openUserInfo() {
             // 已登录，打开用户信息
-            console.log("AAAAA: " + isLoggedIn);
-            if(isLoggedIn){
+            if (isLoggedIn) {
 
             }
             // 未登录，打开登录窗口
-            else
-            {
+            else {
                 createLoginWindow();
             }
         },
 
-        minWin(){
+        openAuthInfo() {
+            // 已授权，打授权信息
+            if (isAuthed) {
+
+            }
+            // 未授权，打开授权窗口
+            else {
+                createAuthWindow();
+            }
+        },
+
+        minWin() {
             const mainWin = remote.getCurrentWindow();
             mainWin.minimize();
         },
 
-        maxWin(){
+        maxWin() {
             const mainWin = remote.getCurrentWindow();
             if (mainWin.isMaximized()) {
                 mainWin.unmaximize();
-              } else {
+            } else {
                 mainWin.maximize();
-              }
+            }
         },
 
-        closeWin(){
+        closeWin() {
             const mainWin = remote.getCurrentWindow();
             mainWin.close();
         }
@@ -54,20 +65,23 @@ async function loginSessionid() {
     const result = await ipcRenderer.invoke('login-sessionid');
 }
 
-function createLoginWindow(){
+function createLoginWindow() {
     ipcRenderer.invoke('create-login-window');
 }
 
-ipcRenderer.on('response', (event, data)=>{
+function createAuthWindow() {
+    ipcRenderer.invoke('create-auth-window');
+}
+
+ipcRenderer.on('loginStatus', (event, data) => {
     const response = JSON.parse(data);
-    if("login-status" == response.type){
-        if("success" == response.result){
-            vm.uname_ = response.username;
-            isLoggedIn = true;
-        }
-        else{
-            vm.uname_ = "登录";
-        }
+    if ("success" == response.result) {
+        vm.uname_ = response.username;
+        isLoggedIn = true;
+        ipcRenderer.invoke('auth-status-request');
+    }
+    else {
+        vm.uname_ = "登录";
     }
 })
 

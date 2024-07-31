@@ -21,7 +21,29 @@ client.on('error', (err)=>{
 });
 client.on('data', (data)=>{
     handler.handleData(data.toString());
-})
+});
+
+function createAuthWindow() {
+    let authWin = new BrowserWindow({
+        show: false,
+        width: 350,
+        height: 450,
+        resizable: false,
+        parent: global.mainWindow,
+        modal: true,
+        frame: false,
+        webPreferences:{
+            nodeIntegration: true,
+            enableRemoteModule: true,
+            contextIsolation: false,
+        }
+    });
+    authWin.once('ready-to-show', () => {
+        authWin.show();
+    });
+    authWin.loadFile('./static/html/auth.html');
+    global.authWindow = authWin;
+}
 
 function createLoginWindow() {
     let loginWin = new BrowserWindow({
@@ -41,8 +63,8 @@ function createLoginWindow() {
     loginWin.once('ready-to-show', () => {
         loginWin.show();
     });
-
     loginWin.loadFile('./static/html/login.html');
+    global.loginWindow = loginWin;
 }
 
 function createMainWindow() {
@@ -76,14 +98,34 @@ ipcMain.handle('login-sessionid', async(event, args) => {
 });
 
 ipcMain.handle('login-password', async(event, args) => {
-    console.log(args);
     const idpw = JSON.parse(args);
     icd.clientToServer001.operation = 'login-password';
     icd.clientToServer001.uid = idpw.uid;
     icd.clientToServer001.password = idpw.password;
     icd.clientToServer001.sessionId="";
-    console.log(JSON.stringify(icd.clientToServer001))
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
+ipcMain.handle('auth-qrcode-request', async(event, args) => {
+    icd.clientToServer001.operation = 'auth-qrcode-request';
+    icd.clientToServer001.password = '';
+    icd.clientToServer001.sessionId = userData['session-id'];
+    icd.clientToServer001.uid = '';
+    icd.clientToServer001.username = '';
+    console.log(JSON.stringify(icd.clientToServer001));
+    client.write(JSON.stringify(icd.clientToServer001));
+});
+
+ipcMain.handle('auth-status-request', async(event, args) => {
+    icd.clientToServer001.operation = 'auth-status-request';
+    icd.clientToServer001.password = '';
+    icd.clientToServer001.sessionId = global.sessionId;
+    icd.clientToServer001.uid = '';
+    icd.clientToServer001.username = '';
+    console.log(JSON.stringify(icd.clientToServer001));
+    client.write(JSON.stringify(icd.clientToServer001));
+});
+
+
 ipcMain.handle('create-login-window', createLoginWindow);
+ipcMain.handle('create-auth-window', createAuthWindow);

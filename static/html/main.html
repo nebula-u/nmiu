@@ -15,10 +15,13 @@
             <div class="window-controls">
                 <div class="search"></div>
                 <div class="login-status">
-                    <img src="../img/defaluthead.svg" class="head" @click="openUserInfo" alt="">
+                    <img src="../img/my.jpg" class="head" @click="openUserInfo" alt="">
                     <div class="user-name" @click="openUserInfo" >{{uname_}}</div>
                 </div>
-                <div class="cloud-service"></div>
+                <div class="cloud-service">
+                    <img src="../icon/cloud.svg" class="cloud-icon" @click="openAuthInfo" alt="">
+                    <div class="cloud-status" @click="openAuthInfo">{{cloudStatus_}}</div>
+                </div>
                 <div class="win-ctrl">
                     <div class="minWindow" @click="minWin">
                         <img src="../icon/minWindow.svg" alt="" srcset="">

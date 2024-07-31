@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../plugin/vue/vue.global.js"></script>
+    <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body id="app">
+    <div class="window-control">
+        <div class="drag">扫码登录</div>
+        <div class="close" @click="closeWin">
+            <img src="../icon/close.svg" alt="">
+        </div>
+    </div>
+    <div class="QRCode">
+        <img v-bind:src="imageUrl_" alt="">
+    </div>
+    <script src="../javascript/auth.js"></script>
+</body>
+</html>

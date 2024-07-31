@@ -8,7 +8,7 @@
 .menu{
     width: 240px;
     height: 100vh;
-    background-color: aqua;
+    background-color: white;
 }
 
 .main-content {
@@ -30,13 +30,15 @@
 
 .search {
     flex: 1;
-    background-color: white;
+    /* background-color: white; */
+    -webkit-app-region: drag;
 }
 
 .login-status {
     width: 120px;
     background-color: transparent;
     line-height: 30px;
+    user-select: none;
 
     display: flex;
     flex-direction: row;
@@ -59,14 +61,34 @@
 }
 
 .cloud-service {
+    user-select: none;
     width: 120px;
-    background-color: beige;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.cloud-icon{
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.cloud-status{
+    text-align: center;
+    font-size: small;
+    cursor: pointer;
 }
 
 .win-ctrl {
     width: 150px;
     background-color: transparent;
     cursor: pointer;
+    user-select: none;
 
     display: flex;
     flex-direction: row;

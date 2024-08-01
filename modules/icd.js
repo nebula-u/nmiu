@@ -27,6 +27,7 @@ var ipcPanStatusResult = {
     username: "",
     headlink: "",
     QRCodeUrl: "",
+    PanAuthLoginResult: "",
 }
 
 module.exports = {

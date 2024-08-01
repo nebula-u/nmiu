@@ -126,6 +126,15 @@ ipcMain.handle('auth-status-request', async(event, args) => {
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
+ipcMain.handle('auth-login-status-resuest', async(event, args) => {
+    icd.clientToServer001.operation = 'auth-login-status-resuest';
+    icd.clientToServer001.password = '';
+    icd.clientToServer001.sessionId = global.sessionId;
+    icd.clientToServer001.uid = '';
+    icd.clientToServer001.username = '';
+    console.log(JSON.stringify(icd.clientToServer001));
+    client.write(JSON.stringify(icd.clientToServer001));
+})
 
 ipcMain.handle('create-login-window', createLoginWindow);
 ipcMain.handle('create-auth-window', createAuthWindow);

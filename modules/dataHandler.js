@@ -3,6 +3,7 @@ const global = require('./global');
 const icd = require('./icd');
 
 function handleData(data) {
+    console.log(data);
     const response = JSON.parse(data);
     if ("login-status-pw" == response.type) {
         if ("success" == response.result) {
@@ -57,6 +58,17 @@ function handleData(data) {
             icd.ipcPanStatusResult.QRCodeUrl = "";
         }
         global.authWindow.webContents.send("qrcode-url", JSON.stringify(icd.ipcPanStatusResult));
+    }
+    if ("auth-login-status" == response.type){
+        if("true" == response.result){
+            icd.ipcPanStatusResult.PanAuthLoginResult = "true";
+        }
+        else
+        {
+            icd.ipcPanStatusResult.PanAuthLoginResult = "false";
+        }
+        console.log("kkkkk:" + icd.ipcPanStatusResult);
+        global.authWindow.webContents.send("pan-auth-login-result", JSON.stringify(icd.ipcPanStatusResult));
     }
 }
 

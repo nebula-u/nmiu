@@ -14,12 +14,11 @@ function handleData(data) {
             });
             icd.ipcLoginResult.username = response.username;
             icd.ipcLoginResult.result = "success";
-            global.loginWindow.webContents.send("loginStatus", JSON.stringify(icd.ipcLoginResult));
         }
         else if ("fail" == response.result) {
             icd.ipcLoginResult.result = "fail";
-            global.loginWindow.webContents.send("loginStatus", JSON.stringify(icd.ipcLoginResult));
         }
+        global.loginWindow.webContents.send("loginStatus", JSON.stringify(icd.ipcLoginResult));
         global.mainWindow.webContents.send("loginStatus", JSON.stringify(icd.ipcLoginResult));
     }
 
@@ -41,17 +40,17 @@ function handleData(data) {
 
     if ("pan-auth-status" == response.type) {
         if ("true" == response.result) {
-
+            icd.ipcPanStatusResult.result = "true";
         }
         else if ("false" == response.result) {
-
+            icd.ipcPanStatusResult.result = "false";
         }
+        global.mainWindow.webContents.send("pan-auth-status", JSON.stringify(icd.ipcPanStatusResult));
     }
     if ("QRCode-url" == response.type) {
         if ("true" == response.result) {
             icd.ipcPanStatusResult.result = "true";
             icd.ipcPanStatusResult.QRCodeUrl = response.url;
-            console.log(response.url);
         }
         else if ("false" == response.result) {
             icd.ipcPanStatusResult.result = "false";
@@ -67,8 +66,18 @@ function handleData(data) {
         {
             icd.ipcPanStatusResult.PanAuthLoginResult = "false";
         }
-        console.log("kkkkk:" + icd.ipcPanStatusResult);
         global.authWindow.webContents.send("pan-auth-login-result", JSON.stringify(icd.ipcPanStatusResult));
+    }
+    if("file-list" == response.type){
+        if("true" == response.result){
+            icd.ipcFileList.result = "true",
+            icd.ipcFileList.filelist = response.filelist;
+        }
+        else{
+            icd.ipcFileList.result = "false";
+        }
+        global.mainWindow.webContents.send("file-list", JSON.stringify(icd.ipcFileList));
+        console.log("@@@: " + JSON.stringify(icd.ipcFileList));
     }
 }
 

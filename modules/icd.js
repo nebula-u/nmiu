@@ -30,9 +30,15 @@ var ipcPanStatusResult = {
     PanAuthLoginResult: "",
 }
 
+var ipcFileList = {
+    result: "",
+    filelist: "",
+}
+
 module.exports = {
     clientToServer001,
     serverToclient001,
     ipcLoginResult,
-    ipcPanStatusResult
+    ipcPanStatusResult,
+    ipcFileList
 }

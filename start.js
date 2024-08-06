@@ -94,6 +94,7 @@ ipcMain.handle('net-status-request', async (event, args) => {
 ipcMain.handle('login-sessionid', async(event, args) => {
     icd.clientToServer001.operation = 'login-sessionid';
     icd.clientToServer001.sessionId = userData['session-id'];
+    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -103,6 +104,7 @@ ipcMain.handle('login-password', async(event, args) => {
     icd.clientToServer001.uid = idpw.uid;
     icd.clientToServer001.password = idpw.password;
     icd.clientToServer001.sessionId="";
+    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -128,6 +130,16 @@ ipcMain.handle('auth-status-request', async(event, args) => {
 
 ipcMain.handle('auth-login-status-resuest', async(event, args) => {
     icd.clientToServer001.operation = 'auth-login-status-resuest';
+    icd.clientToServer001.password = '';
+    icd.clientToServer001.sessionId = global.sessionId;
+    icd.clientToServer001.uid = '';
+    icd.clientToServer001.username = '';
+    console.log(JSON.stringify(icd.clientToServer001));
+    client.write(JSON.stringify(icd.clientToServer001));
+})
+
+ipcMain.handle('get-file-list', async(event, args) => {
+    icd.clientToServer001.operation = 'get-file-list';
     icd.clientToServer001.password = '';
     icd.clientToServer001.sessionId = global.sessionId;
     icd.clientToServer001.uid = '';

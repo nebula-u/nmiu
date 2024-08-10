@@ -81,8 +81,15 @@ const app = createApp({
             }
         },
 
-        GetFileList_(requestPath) {
-            GetFileList(requestPath);
+        GetFileList_(requestPath, fid, isdir) {
+            if(isdir == "1")
+            {
+                GetFileList(requestPath);
+            }
+            else
+            {
+                GetDlink(fid);
+            }
         },
 
         minWin() {
@@ -141,6 +148,10 @@ function GetFileList(requestPath) {
     ipcRenderer.invoke("get-file-list", requestPath);
 }
 
+function GetDlink(fid) {
+    ipcRenderer.invoke("get-file-dlink", fid);
+}
+
 ipcRenderer.on('loginStatus', (event, data) => {
     const response = JSON.parse(data);
     if ("success" == response.result) {
@@ -183,6 +194,7 @@ ipcRenderer.on('file-list', (event, data) => {
                 m_file_thumbs: "",
                 m_file_icon: "",
                 m_file_fid: "",
+                m_file_isdir: "",
             }
 
             /*文件名处理*/
@@ -191,6 +203,7 @@ ipcRenderer.on('file-list', (event, data) => {
             /*文件类型处理*/
             const extname = path.extname(file_info.m_file_name).toLowerCase();
             var t = 0;
+            file_info.m_file_isdir = "0";
             switch (extname) {
                 case '.jpg':
                 case '.jpeg':
@@ -237,6 +250,7 @@ ipcRenderer.on('file-list', (event, data) => {
             }
             if ("1" == response.filelist[i].isdir) {
                 t = 0;
+                file_info.m_file_isdir = "1";
             }
 
             file_info.m_file_type = type[t];

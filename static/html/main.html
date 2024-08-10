@@ -10,7 +10,7 @@
     <div id="app">
         <div class="menu">
             <div class="menu-items">
-                <img src="../icon/files.svg" alt="" srcset="" class="item" @click="GetFileList_('/')">
+                <img src="../icon/files.svg" alt="" srcset="" class="item" @click="GetFileList_('/', '', '1')">
                 <img src="../icon/movie.svg" alt="" srcset="" class="item" @click="">
                 <img src="../icon/music.svg" alt="" srcset="" class="item" @click="">
                 <img src="../icon/picture.svg" alt="" srcset="" class="item" @click="">
@@ -64,7 +64,7 @@
                         <div class="icon">
                             <img :src="file.m_file_icon" alt="" srcset="">
                         </div>
-                        <div class="file-name" @click="GetFileList_(file.m_file_path)">{{file.m_file_name}}</div>
+                        <div class="file-name" @click="GetFileList_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">{{file.m_file_name}}</div>
                         <div class="modify-date">{{file.m_file_time}}</div>
                         <div class="file-type">{{file.m_file_type}}</div>
                         <div class="file-size">{{file.m_file_size}}</div>

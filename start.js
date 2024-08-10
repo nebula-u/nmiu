@@ -159,7 +159,19 @@ ipcMain.handle('get-file-list', async(event, requestPath) => {
     icd.clientToServer001.path = requestPath;
     console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
-})
+});
+
+ipcMain.handle('get-file-dlink', async(event, fid) => {
+    icd.clientToServer001.operation = 'get-file-dlink';
+    icd.clientToServer001.password = '';
+    icd.clientToServer001.sessionId = global.sessionId;
+    icd.clientToServer001.uid = '';
+    icd.clientToServer001.username = '';
+    icd.clientToServer001.path = "";
+    icd.clientToServer001.fid = fid;
+    console.log(icd.clientToServer001);
+    client.write(JSON.stringify(icd.clientToServer001));
+});
 
 ipcMain.handle('create-login-window', createLoginWindow);
 ipcMain.handle('create-auth-window', createAuthWindow);

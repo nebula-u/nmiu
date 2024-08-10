@@ -33,7 +33,6 @@ ipcRenderer.on('qrcode-url', (event, data) => {
     {
         vm.imageUrl_ = "../img/QRCodeFail.png";
     }
-    console.log(response);
 })
 
 function getAuthLoginStatus() {

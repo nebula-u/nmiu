@@ -3,7 +3,9 @@ const global = require('./global');
 const icd = require('./icd');
 
 function handleData(data) {
-    console.log(data);
+    fs.appendFile('./log.txt', "\n--------------------------------\n" + data, (err) => {
+        console.log("error:" + err);
+    });
     const response = JSON.parse(data);
     if ("login-status-pw" == response.type) {
         if ("success" == response.result) {
@@ -77,7 +79,6 @@ function handleData(data) {
             icd.ipcFileList.result = "false";
         }
         global.mainWindow.webContents.send("file-list", JSON.stringify(icd.ipcFileList));
-        console.log("@@@: " + JSON.stringify(icd.ipcFileList));
     }
 }
 

@@ -1,5 +1,5 @@
 #app {
-    background-color: #f7f9fc;
+    background-color: #e6eceb;
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -8,55 +8,37 @@
 }
 
 .menu {
-    width: 200px;
+    width: 40px;
     height: 100vh;
-    background-color: #f0f3f6;
+    background-color: #cfddda;
 
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
 }
 
-.menu .title {
-    height: 70px;
-    margin-bottom: 8px;
+.menu .menu-items{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.menu .title img {
-    height: 36px;
-    width: 36px;
-    margin-right: 15px;
-}
-
-.menu .title .name {
-    font-size: 20px;
-    font-weight: bold;
-    color: rgb(65, 65, 65);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.menu .menu-items .item {
-    height: 30px;
-    /* background-color: #d6b8ff; */
-    margin-top: 10px;
-    margin-left: 15px;
-    margin-right: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 8px;
-    line-height: 30px;
-    color: #686868;
+.menu .menu-items img {
+    height: 28px;
+    width: 28px;
+    margin-top: 20px;
     cursor: pointer;
     user-select: none;
 }
 
+.menu .menu-items img:hover {
+    background-color: rgb(190, 190, 190);
+}
+
 .main-content {
     flex: 1;
-
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -71,7 +53,7 @@
     align-items: stretch;
 }
 
-.search {
+.upsearch {
     flex: 1;
     /* background-color: white; */
     -webkit-app-region: drag;
@@ -189,7 +171,45 @@
 
 .oprations {
     height: 40px;
-    /* background-color: aqua; */
+    display: flex;
+    flex-direction: row;
+}
+
+.oprations .left{
+    width: 150px;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.oprations .left img{
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+}
+
+.oprations .path-docker{
+    flex: 2;
+    background-color: rgb(255, 255, 255);
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 10px;
+    border-radius: 5px;
+} 
+
+.oprations .search{
+    flex: 1;
+    background-color: rgb(255, 255, 255);
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 5px;
+    border: none;
 }
 
 .table-header {
@@ -203,8 +223,12 @@
     border-bottom: 1px solid rgb(211, 211, 211);
 }
 
-.table-header .select{
+.table-header .select-all{
     width: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .table-header .name{
@@ -220,7 +244,7 @@
 }
 
 .table-header .size{
-    flex: 2;
+    flex: 1;
 }
 
 .file-items {
@@ -228,6 +252,7 @@
     /* background-color: azure; */
     overflow: auto;
     /* 自动添加滚动条 */
+    align-items: stretch;
 }
 
 /* Webkit 浏览器（如 Chrome 和 Safari） */
@@ -237,7 +262,7 @@
 }
 
 .file-items::-webkit-scrollbar-thumb {
-    background-color: rgb(133, 0, 195);
+    background-color: rgb(0, 161, 67);
     /* 滚动条颜色 */
     border-radius: 10px;
     /* 滚动条圆角 */
@@ -261,20 +286,53 @@
 
 .file-items .item .icon{
     width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.file-items .item .icon img{
+    width: 12px;
+    height: 12px;
 }
 
 .file-items .item .file-name{
     flex: 3;
+    cursor: pointer;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
 }
 
 .file-items .item .modify-date{
     flex: 2;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
 }
 
 .file-items .item .file-type{
     flex: 1;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
 }
 
 .file-items .item .file-size{
-    flex: 2;
+    flex: 1;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
 }

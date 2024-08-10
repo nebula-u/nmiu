@@ -10,6 +10,9 @@ const net       = require('net');
 const serverHost = config['server-host'];
 const serverPort = config['server-port'];
 const client = new net.Socket();
+let   recvSize = 0;
+let   recvData = "";
+let   expectedSize = 0;
 
 client.connect(serverPort, serverHost, ()=>{
     console.log('connect to server: success');
@@ -20,7 +23,21 @@ client.on('error', (err)=>{
     global.connectStatus = "false";
 });
 client.on('data', (data)=>{
-    handler.handleData(data.toString());
+    if (8 == data.length){
+        recvSize = 0;
+        recvData = "";
+        expectedSize = data.readBigInt64LE(0);
+        console.log(expectedSize);
+    }
+    else
+    {
+        console.log("recved size: " + data.toString().length);
+        recvData = recvData+data;
+        recvSize = recvSize+data.toString().length;
+        if(recvSize == expectedSize){
+            handler.handleData(recvData);
+        }
+    }
 });
 
 function createAuthWindow() {
@@ -94,7 +111,6 @@ ipcMain.handle('net-status-request', async (event, args) => {
 ipcMain.handle('login-sessionid', async(event, args) => {
     icd.clientToServer001.operation = 'login-sessionid';
     icd.clientToServer001.sessionId = userData['session-id'];
-    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -104,7 +120,6 @@ ipcMain.handle('login-password', async(event, args) => {
     icd.clientToServer001.uid = idpw.uid;
     icd.clientToServer001.password = idpw.password;
     icd.clientToServer001.sessionId="";
-    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -114,7 +129,6 @@ ipcMain.handle('auth-qrcode-request', async(event, args) => {
     icd.clientToServer001.sessionId = userData['session-id'];
     icd.clientToServer001.uid = '';
     icd.clientToServer001.username = '';
-    console.log(JSON.stringify(icd.clientToServer001));
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -124,7 +138,6 @@ ipcMain.handle('auth-status-request', async(event, args) => {
     icd.clientToServer001.sessionId = global.sessionId;
     icd.clientToServer001.uid = '';
     icd.clientToServer001.username = '';
-    console.log(JSON.stringify(icd.clientToServer001));
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -134,17 +147,17 @@ ipcMain.handle('auth-login-status-resuest', async(event, args) => {
     icd.clientToServer001.sessionId = global.sessionId;
     icd.clientToServer001.uid = '';
     icd.clientToServer001.username = '';
-    console.log(JSON.stringify(icd.clientToServer001));
     client.write(JSON.stringify(icd.clientToServer001));
 })
 
-ipcMain.handle('get-file-list', async(event, args) => {
+ipcMain.handle('get-file-list', async(event, requestPath) => {
     icd.clientToServer001.operation = 'get-file-list';
     icd.clientToServer001.password = '';
     icd.clientToServer001.sessionId = global.sessionId;
     icd.clientToServer001.uid = '';
     icd.clientToServer001.username = '';
-    console.log(JSON.stringify(icd.clientToServer001));
+    icd.clientToServer001.path = requestPath;
+    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 })
 

@@ -4,6 +4,7 @@ var clientToServer001 = {
     uid: "",
     username: "",
     password: "",
+    path: "",
 }
 
 var serverToclient001 = {

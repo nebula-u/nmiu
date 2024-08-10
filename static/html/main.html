@@ -9,27 +9,24 @@
 <body style="margin: 0px; height: 100%; width: 100%;">
     <div id="app">
         <div class="menu">
-            <div class="title">
-                <img src="../img/avatar.png" alt="">
-                <div class="name">Nebulau</div>
-            </div>
             <div class="menu-items">
-                <div class="item" @click="getFileList">我的网盘</div>
-                <div class="item">音乐</div>
-                <div class="item">影视</div>
-                <div class="item">相册</div>
+                <img src="../icon/files.svg" alt="" srcset="" class="item" @click="GetFileList_('/')">
+                <img src="../icon/movie.svg" alt="" srcset="" class="item" @click="">
+                <img src="../icon/music.svg" alt="" srcset="" class="item" @click="">
+                <img src="../icon/picture.svg" alt="" srcset="" class="item" @click="">
+                <img src="../icon/downloadandupload.svg" alt="" srcset="" class="item" @click="">
             </div>
         </div>
         <div class="main-content">
             <div class="window-controls">
-                <div class="search"></div>
+                <div class="upsearch"></div>
                 <div class="login-status">
-                    <img src="../img/my.jpg" class="head" @click="openUserInfo" alt="">
-                    <div class="user-name" @click="openUserInfo" >{{uname_}}</div>
+                    <img src="../img/my.jpg" class="head" @click="OpenUserInfo_" alt="">
+                    <div class="user-name" @click="OpenUserInfo_" >{{uname_}}</div>
                 </div>
                 <div class="cloud-service">
-                    <img src="../icon/cloud.svg" class="cloud-icon" @click="openAuthInfo" alt="">
-                    <div class="cloud-status" @click="openAuthInfo">{{cloudStatus_}}</div>
+                    <img src="../icon/cloud.svg" class="cloud-icon" @click="OpenAuthInfo_" alt="">
+                    <div class="cloud-status" @click="OpenAuthInfo_">{{cloudStatus_}}</div>
                 </div>
                 <div class="win-ctrl">
                     <div class="minWindow" @click="minWin">
@@ -44,21 +41,33 @@
                 </div>
             </div>
             <div class="content">
-                <div class="oprations"></div>
+                <div class="oprations">
+                    <div class="left">
+                        <img src="../icon/back.svg" alt="" srcset="" class="back" @click="goBack">
+                        <img src="../icon/forword.svg" alt="" srcset="" class="forword" @click="goForward">
+                        <img src="../icon/refresh.svg" alt="" srcset="" class="refresh">
+                    </div>
+                    <div class="path-docker"></div>
+                    <input type="text" name="" id="" class="search" placeholder="搜索">
+                </div>
                 <div class="table-header">
-                    <div class="select"></div>
+                    <div class="select-all">
+                        <input type="checkbox" name="" id="">
+                    </div>
                     <div class="name">名称</div>
                     <div class="date">修改日期</div>
                     <div class="type">类型</div>
                     <div class="size">大小</div>
                 </div>
                 <div class="file-items">
-                    <li class="item" v-for="{m_file_name, m_file_time, m_file_type, m_file_size} in file_list_">
-                        <div class="icon"></div>
-                        <div class="file-name">{{file_name}}</div>
-                        <div class="modify-date">{{mtime}}</div>
-                        <div class="file-type">{{file_type}}</div>
-                        <div class="file-size">{{file_size}}</div>
+                    <li class="item" v-for="file in file_list_">
+                        <div class="icon">
+                            <img :src="file.m_file_icon" alt="" srcset="">
+                        </div>
+                        <div class="file-name" @click="GetFileList_(file.m_file_path)">{{file.m_file_name}}</div>
+                        <div class="modify-date">{{file.m_file_time}}</div>
+                        <div class="file-type">{{file.m_file_type}}</div>
+                        <div class="file-size">{{file.m_file_size}}</div>
                     </li>
                 </div>
             </div>

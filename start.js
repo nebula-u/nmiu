@@ -27,11 +27,9 @@ client.on('data', (data)=>{
         recvSize = 0;
         recvData = "";
         expectedSize = data.readBigInt64LE(0);
-        console.log(expectedSize);
     }
     else
     {
-        console.log("recved size: " + data.toString().length);
         recvData = recvData+data;
         recvSize = recvSize+data.toString().length;
         if(recvSize == expectedSize){
@@ -157,7 +155,6 @@ ipcMain.handle('get-file-list', async(event, requestPath) => {
     icd.clientToServer001.uid = '';
     icd.clientToServer001.username = '';
     icd.clientToServer001.path = requestPath;
-    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
@@ -169,7 +166,6 @@ ipcMain.handle('get-file-dlink', async(event, fid) => {
     icd.clientToServer001.username = '';
     icd.clientToServer001.path = "";
     icd.clientToServer001.fid = fid;
-    console.log(icd.clientToServer001);
     client.write(JSON.stringify(icd.clientToServer001));
 });
 

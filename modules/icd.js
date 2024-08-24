@@ -37,10 +37,16 @@ var ipcFileList = {
     filelist: "",
 }
 
+var ipcDLinkList = {
+    result: "",
+    dlinklist: "",
+}
+
 module.exports = {
     clientToServer001,
     serverToclient001,
     ipcLoginResult,
     ipcPanStatusResult,
-    ipcFileList
+    ipcFileList,
+    ipcDLinkList
 }

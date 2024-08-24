@@ -50,7 +50,8 @@ const app = createApp({
             uname_: "登录",
             cloudStatus_: "未授权",
             file_list_: [],
-            test_: {}
+            test_: {},
+            currentDisplay_: ""
         }
     },
     methods: {
@@ -82,6 +83,7 @@ const app = createApp({
         },
 
         GetFileList_(requestPath, fid, isdir) {
+            this.currentDisplay_ = 'netdiskPage';
             if(isdir == "1")
             {
                 GetFileList(requestPath);
@@ -90,6 +92,22 @@ const app = createApp({
             {
                 GetDlink(fid);
             }
+        },
+        NetdiskDisplay(){
+            this.currentDisplay_ = 'netdiskPage';
+            this.GetFileList_('/', '', '1');
+        },
+        MovieDisplay(){
+            this.currentDisplay_ = 'moviePage';
+        },
+        MusicDisplay(){
+            this.currentDisplay_ = 'musicPage';
+        },
+        ImageDisplay(){
+            this.currentDisplay_ = 'imagePage';
+        },
+        DownloadDisplay(){
+            this.currentDisplay_ = 'downloadPage';
         },
 
         minWin() {
@@ -112,7 +130,6 @@ const app = createApp({
         },
 
         goBack(){
-            console.log(currentDirectory);
             if(backStack.length>0){
                 forwardStack.push(currentDirectory);
                 currentDirectory = backStack.pop();
@@ -121,7 +138,6 @@ const app = createApp({
         },
 
         goForward(){
-            console.log(currentDirectory);
             if(forwardStack.length>0){
                 backStack.push(currentDirectory);
                 currentDirectory = forwardStack.pop();
@@ -179,8 +195,8 @@ ipcRenderer.on('pan-auth-status', (event, data) => {
 
 ipcRenderer.on('file-list', (event, data) => {
     const response = JSON.parse(data);
+    console.log(response);
     if ("true" == response.result) {
-        console.log("文件列表获取成功");
         let file_info_list = [];
         for (var i = 0; i < response.filelist.length; i++) {
             let file_info = {
@@ -288,9 +304,18 @@ ipcRenderer.on('file-list', (event, data) => {
             vm.test_ = file_info;
         }
         vm.file_list_ = file_info_list;
-        console.log(vm.file_list_);
     }
-    else {
-        console.log("文件列表获取失败");
+})
+
+ipcRenderer.on('dlink-list', (event, data) => {
+    const response = JSON.parse(data);
+    console.log(response.result);
+    if("true" == response.result) {
+        let dlink_list = [];
+        console.log(response.dlinklist.length);
+        
+        for (var i = 0; i < response.dlinklist.length; i++){
+            console.log(response.dlinklist[i].dlink)
+        }
     }
 })

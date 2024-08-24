@@ -80,6 +80,17 @@ function handleData(data) {
         }
         global.mainWindow.webContents.send("file-list", JSON.stringify(icd.ipcFileList));
     }
+    if("dlink-list" == response.type){
+        if("true" == response.result){
+            icd.ipcDLinkList.result = "true";
+            icd.ipcDLinkList.dlinklist = response.dlinkList;
+        }
+        else{
+            icd.ipcDLinkList.result = "false";
+        }
+        global.mainWindow.webContents.send("dlink-list", JSON.stringify(icd.ipcDLinkList));
+        console.log(icd.ipcDLinkList);
+    }
 }
 
 module.exports = {

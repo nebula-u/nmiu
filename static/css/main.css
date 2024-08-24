@@ -336,3 +336,109 @@
     white-space: nowrap;
     /* 禁止换行 */
 }
+
+.download {
+    display: flex;
+    flex-direction: column;
+}
+
+.download .operation {
+    background-color: aquamarine;
+    height: 40px;
+}
+
+.download .header {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    line-height: 40px;
+    font-size: small;
+    font-weight: bold;
+    border-bottom: 1px solid rgb(211, 211, 211);
+}
+
+.download .header .select-all{
+    width: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.download .header .name{
+    flex: 2;
+}
+
+.download .header .size{
+    flex: 1;
+}
+
+.download .header .status{
+    flex: 1;
+}
+
+.download .header .process{
+    flex: 2;
+}
+
+.downloading-files{
+    flex: 1;
+    /* background-color: azure; */
+    overflow: auto;
+    /* 自动添加滚动条 */
+    align-items: stretch;
+}
+
+.downloading-files .item{
+    height: 40px;
+    background-color: transparent;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    line-height: 40px;
+    font-size: small;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.downloading-files .item .file-name{
+    margin-left: 40px;
+    flex: 2;
+    cursor: pointer;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
+}
+
+.downloading-files .item .file-size{
+    flex: 1;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
+}
+
+.downloading-files .item .file-status{
+    flex: 1;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
+}
+
+.downloading-files .item .file-process{
+    flex: 2;
+    overflow: hidden;
+    /* 对超出容器的部分强制截取，高度不确定则换行 */
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
+}

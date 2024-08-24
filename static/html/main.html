@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" style="height: 100%; width: 100%;">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../plugin/vue/vue.global.js"></script>
     <link rel="stylesheet" href="../css/main.css">
 </head>
+
 <body style="margin: 0px; height: 100%; width: 100%;">
     <div id="app">
         <div class="menu">
@@ -22,7 +24,7 @@
                 <div class="upsearch"></div>
                 <div class="login-status">
                     <img src="../img/my.jpg" class="head" @click="OpenUserInfo_" alt="">
-                    <div class="user-name" @click="OpenUserInfo_" >{{uname_}}</div>
+                    <div class="user-name" @click="OpenUserInfo_">{{uname_}}</div>
                 </div>
                 <div class="cloud-service">
                     <img src="../icon/cloud.svg" class="cloud-icon" @click="OpenAuthInfo_" alt="">
@@ -64,7 +66,9 @@
                         <div class="icon">
                             <img :src="file.m_file_icon" alt="" srcset="">
                         </div>
-                        <div class="file-name" @click="GetFileList_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">{{file.m_file_name}}</div>
+                        <div class="file-name"
+                            @click="GetFileList_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">
+                            {{file.m_file_name}}</div>
                         <div class="modify-date">{{file.m_file_time}}</div>
                         <div class="file-type">{{file.m_file_type}}</div>
                         <div class="file-size">{{file.m_file_size}}</div>
@@ -80,13 +84,29 @@
             <div v-if="(currentDisplay_=='imagePage')">
                 图像
             </div>
-            <div v-if="(currentDisplay_=='downloadPage')">
-                <div v-if="(downloadStatus_=='downloading')">下载中</div>
-                <div v-if="(downloadStatus_=='downloaded')">下载完成</div>
-                <div v-if="(downloadStatus_=='nodownload')">未下载</div>
+            <div v-if="(currentDisplay_=='downloadPage')" class="download">
+                <div class="operation"></div>
+                <div class="header">
+                    <div class="select-all">
+                        <input type="checkbox" name="" id="">
+                    </div>
+                    <div class="name">名称</div>
+                    <div class="size">大小</div>
+                    <div class="status">状态</div>
+                    <div class="process">进度</div>
+                </div>
+                <div class="downloading-files">
+                    <li class="item" v-for="file in download_file_list_">
+                        <div class="file-name">{{file.m_file_name}}</div>
+                        <div class="file-size">{{file.m_file_size}}</div>
+                        <div class="file-status">{{file.m_file_status}}</div>
+                        <div class="file-process">{{file.m_file_process}}</div>
+                    </li>
+                </div>
             </div>
         </div>
     </div>
     <script src="../javascript/main.js"></script>
 </body>
+
 </html>

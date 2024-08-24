@@ -1,5 +1,7 @@
 const { createApp } = Vue;
 const { remote, ipcRenderer } = require('electron');
+const https = require('https');
+const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
@@ -51,7 +53,8 @@ const app = createApp({
             cloudStatus_: "未授权",
             file_list_: [],
             test_: {},
-            currentDisplay_: ""
+            currentDisplay_: "",
+            download_file_list_: []
         }
     },
     methods: {
@@ -84,29 +87,27 @@ const app = createApp({
 
         GetFileList_(requestPath, fid, isdir) {
             this.currentDisplay_ = 'netdiskPage';
-            if(isdir == "1")
-            {
+            if (isdir == "1") {
                 GetFileList(requestPath);
             }
-            else
-            {
+            else {
                 GetDlink(fid);
             }
         },
-        NetdiskDisplay(){
+        NetdiskDisplay() {
             this.currentDisplay_ = 'netdiskPage';
             this.GetFileList_('/', '', '1');
         },
-        MovieDisplay(){
+        MovieDisplay() {
             this.currentDisplay_ = 'moviePage';
         },
-        MusicDisplay(){
+        MusicDisplay() {
             this.currentDisplay_ = 'musicPage';
         },
-        ImageDisplay(){
+        ImageDisplay() {
             this.currentDisplay_ = 'imagePage';
         },
-        DownloadDisplay(){
+        DownloadDisplay() {
             this.currentDisplay_ = 'downloadPage';
         },
 
@@ -129,16 +130,16 @@ const app = createApp({
             mainWin.close();
         },
 
-        goBack(){
-            if(backStack.length>0){
+        goBack() {
+            if (backStack.length > 0) {
                 forwardStack.push(currentDirectory);
                 currentDirectory = backStack.pop();
                 GetFileList(currentDirectory);
             }
         },
 
-        goForward(){
-            if(forwardStack.length>0){
+        goForward() {
+            if (forwardStack.length > 0) {
                 backStack.push(currentDirectory);
                 currentDirectory = forwardStack.pop();
                 GetFileList(currentDirectory);
@@ -309,13 +310,67 @@ ipcRenderer.on('file-list', (event, data) => {
 
 ipcRenderer.on('dlink-list', (event, data) => {
     const response = JSON.parse(data);
-    console.log(response.result);
-    if("true" == response.result) {
-        let dlink_list = [];
-        console.log(response.dlinklist.length);
-        
-        for (var i = 0; i < response.dlinklist.length; i++){
-            console.log(response.dlinklist[i].dlink)
+    console.log(response);
+    if ("true" == response.result) {
+        // let dlink_list = [];        
+        for (var i = 0; i < response.dlinklist.length; i++) {
+            let dlink_info = {
+                m_file_name: "",
+                m_file_status: "",
+                m_file_size: "",
+                m_file_dlink: "",
+                m_file_process: "",
+            }
+            dlink_info.m_file_name = response.dlinklist[i].filename;
+            dlink_info.m_file_dlink = response.dlinklist[i].dlink;
+            dlink_info.m_file_size = '2.00Gb';
+            dlink_info.m_file_status = '等待下载';
+            dlink_info.m_file_process = "";
+            vm.download_file_list_.push(dlink_info);
+            download(vm.download_file_list_[vm.download_file_list_.length - 1]);
         }
     }
-})
+});
+
+const options = {
+    headers: {
+        'User-Agent': 'pan.baidu.com'
+    }
+};
+
+function handleRedirect(response, item) {
+    if (response.statusCode === 302) {
+        const redirectUrl = response.headers.location;
+        console.log(`Redirecting to: ${redirectUrl}`);
+        http.get(redirectUrl, options, (response) => {
+            handleRedirect(response, item);
+        }).on('error', (err) => {
+            console.error(err);
+        });
+    } else {
+        const file = fs.createWriteStream(item.m_file_name);
+        let downloadedBytes = 0;
+        const totalBytes = parseInt(response.headers['content-length'], 10);
+        console.log("total: " + totalBytes);
+        response.pipe(file);
+        response.on('data', (chunk) => {
+            downloadedBytes += chunk.length;
+            item.m_file_process = `${((downloadedBytes / totalBytes) * 100).toFixed(2)}%`;
+        });
+
+        file.on('finish', () => {
+            item.m_file_status = "下载完成";
+            file.close();
+        });
+    }
+}
+
+function download(item) {
+    item.m_file_status = "下载中";
+    console.log(item.m_file_dlink);
+    https.get(item.m_file_dlink, options, (response) => {
+        handleRedirect(response, item);
+    }).on('error', (err) => {
+        console.error(err);
+    });
+}

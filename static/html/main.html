@@ -62,17 +62,32 @@
                     <div class="size">大小</div>
                 </div>
                 <div class="file-items">
-                    <li class="item" v-for="file in file_list_">
+                    <li class="item" 
+                    v-for="(file, index) in file_list_"
+                    :key="index"
+                    :style="{backgroundColor: selectedFile_ == index ? '#cfddda' : ''}"
+                    @contextmenu.prevent="showContextMenu($event, index)" 
+                    @click="SelectFile_(index)"
+                    @dblclick="GetFileList_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">
                         <div class="icon">
                             <img :src="file.m_file_icon" alt="" srcset="">
                         </div>
-                        <div class="file-name"
-                            @click="GetFileList_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">
+                        <div class="file-name">
                             {{file.m_file_name}}</div>
                         <div class="modify-date">{{file.m_file_time}}</div>
                         <div class="file-type">{{file.m_file_type}}</div>
                         <div class="file-size">{{file.m_file_size}}</div>
                     </li>
+                    <div v-if="menuVisible_" :style="{ top: `${menuY_}px`, left: `${menuX_}px` }" class="context-menu">
+                        <ul>
+                            <li>查看</li>
+                            <li>复制至</li>
+                            <li>剪切至</li>
+                            <li>删除</li>
+                            <li>下载</li>
+                            <li>属性</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div v-if="(currentDisplay_=='moviePage')">

@@ -53,8 +53,12 @@ const app = createApp({
             cloudStatus_: "未授权",
             file_list_: [],
             test_: {},
-            currentDisplay_: "",
-            download_file_list_: []
+            currentDisplay_: "netdiskPage",
+            download_file_list_: [],
+            menuVisible_: false,
+            menuX_: 0,
+            menuY_: 0,
+            selectedFile_: null,
         }
     },
     methods: {
@@ -88,6 +92,7 @@ const app = createApp({
         GetFileList_(requestPath, fid, isdir) {
             this.currentDisplay_ = 'netdiskPage';
             if (isdir == "1") {
+                console.log(requestPath);
                 GetFileList(requestPath);
             }
             else {
@@ -96,7 +101,7 @@ const app = createApp({
         },
         NetdiskDisplay() {
             this.currentDisplay_ = 'netdiskPage';
-            this.GetFileList_('/', '', '1');
+            // this.GetFileList_('/', '', '1');
         },
         MovieDisplay() {
             this.currentDisplay_ = 'moviePage';
@@ -144,8 +149,28 @@ const app = createApp({
                 currentDirectory = forwardStack.pop();
                 GetFileList(currentDirectory);
             }
-        }
-    }
+        },
+
+        showContextMenu(event, index) {
+            this.menuVisible_ = true;
+            this.selectedFile_ = index;
+            this.menuX_ = event.clientX;
+            this.menuY_ = event.clientY;
+        },
+
+        // 隐藏右键菜单
+        hideContextMenu() {
+            this.menuVisible_ = false; // 隐藏菜单
+        },
+
+        SelectFile_(index) {
+            this.selectedFile_ = index;
+        },
+    },
+    mounted() {
+        // 在组件挂载时添加全局点击事件监听器，用于隐藏右键菜单
+        document.addEventListener('click', this.hideContextMenu);
+    },
 });
 const vm = app.mount("#app");
 
@@ -164,6 +189,8 @@ function createAuthWindow() {
 function GetFileList(requestPath) {
     ipcRenderer.invoke("get-file-list", requestPath);
 }
+
+GetFileList("/");
 
 function GetDlink(fid) {
     ipcRenderer.invoke("get-file-dlink", fid);
@@ -196,115 +223,121 @@ ipcRenderer.on('pan-auth-status', (event, data) => {
 
 ipcRenderer.on('file-list', (event, data) => {
     const response = JSON.parse(data);
-    console.log(response);
-    if ("true" == response.result) {
-        let file_info_list = [];
-        for (var i = 0; i < response.filelist.length; i++) {
-            let file_info = {
-                m_file_name: "",
-                m_file_time: "",
-                m_file_size: "",
-                m_file_type: "",   // 0=文件夹；1=图片；2=音频；3=视频；4=压缩文件；
-                // 5=脚本文件；6=源文件；7=头文件；8=库文件
-                // 9=应用程序；10=配置文件；11=文本文件；12=WORD文件；13=PDF文件
-                m_file_path: "",
-                m_file_thumbs: "",
-                m_file_icon: "",
-                m_file_fid: "",
-                m_file_isdir: "",
+    if('filelist' in response)
+    {
+        if ("true" == response.result) {
+            let file_info_list = [];
+            for (var i = 0; i < response.filelist.length; i++) {
+                let file_info = {
+                    m_file_name: "",
+                    m_file_time: "",
+                    m_file_size: "",
+                    m_file_type: "",   // 0=文件夹；1=图片；2=音频；3=视频；4=压缩文件；
+                    // 5=脚本文件；6=源文件；7=头文件；8=库文件
+                    // 9=应用程序；10=配置文件；11=文本文件；12=WORD文件；13=PDF文件
+                    m_file_path: "",
+                    m_file_thumbs: "",
+                    m_file_icon: "",
+                    m_file_fid: "",
+                    m_file_isdir: "",
+                }
+    
+                /*文件名处理*/
+                file_info.m_file_name = response.filelist[i].filename;
+    
+                /*文件类型处理*/
+                const extname = path.extname(file_info.m_file_name).toLowerCase();
+                var t = 0;
+                file_info.m_file_isdir = "0";
+                switch (extname) {
+                    case '.jpg':
+                    case '.jpeg':
+                    case '.png':
+                        t = 1;
+                        break;
+                    case '.mp3':
+                        t = 2;
+                        break;
+                    case '.mp4':
+                    case '.mkv':
+                        t = 3;
+                        break;
+                    case '.zip':
+                        t = 4;
+                        break;
+                    case '.bat':
+                        t = 5;
+                        break;
+                    case '.cpp':
+                        t = 6;
+                        break;
+                    case '.h':
+                        t = 7;
+                        break;
+                    case '.lib':
+                        t = 8;
+                        break;
+                    case '.exe':
+                        t = 9;
+                        break;
+                    case '.ini':
+                        t = 10;
+                        break;
+                    case '.txt':
+                        t = 11;
+                        break;
+                    case '.docx':
+                        t = 12;
+                        break;
+                    case '.pdf':
+                        t = 13;
+                        break;
+                }
+                if ("1" == response.filelist[i].isdir) {
+                    t = 0;
+                    file_info.m_file_isdir = "1";
+                }
+    
+                file_info.m_file_type = type[t];
+    
+                /*文件时间处理*/
+                file_info.m_file_time = (new Date((response.filelist[i].mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
+    
+                /*文件大小处理*/
+                if (response.filelist[i].size < 1024) {
+                    file_info.m_file_size = response.filelist[i].size + ' B'
+                }
+                else if (response.filelist[i].size < 1024 * 1024) {
+                    file_info.m_file_size = (response.filelist[i].size / 1024).toFixed(2) + ' KB'
+                }
+                else if (response.filelist[i].size < 1024 * 1024 * 1024) {
+                    file_info.m_file_size = (response.filelist[i].size / (1024 * 1024)).toFixed(2) + ' MB'
+                }
+                else if (response.filelist[i].size < 1024 * 1024 * 1024 * 1024) {
+                    file_info.m_file_size = (response.filelist[i].size / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
+                }
+                if (1 == response.filelist[i].isdir) {
+                    file_info.m_file_size = "";
+                }
+    
+                /*文件图标处理*/
+                file_info.m_file_icon = icon[t];
+    
+                /*文件路径处理*/
+                file_info.m_file_path = response.filelist[i].path;
+    
+                /*文件fid*/
+                file_info.m_file_fid = response.filelist[i].fid;
+    
+                file_info_list.push(file_info);
+                vm.test_ = file_info;
             }
-
-            /*文件名处理*/
-            file_info.m_file_name = response.filelist[i].filename;
-
-            /*文件类型处理*/
-            const extname = path.extname(file_info.m_file_name).toLowerCase();
-            var t = 0;
-            file_info.m_file_isdir = "0";
-            switch (extname) {
-                case '.jpg':
-                case '.jpeg':
-                case '.png':
-                    t = 1;
-                    break;
-                case '.mp3':
-                    t = 2;
-                    break;
-                case '.mp4':
-                case '.mkv':
-                    t = 3;
-                    break;
-                case '.zip':
-                    t = 4;
-                    break;
-                case '.bat':
-                    t = 5;
-                    break;
-                case '.cpp':
-                    t = 6;
-                    break;
-                case '.h':
-                    t = 7;
-                    break;
-                case '.lib':
-                    t = 8;
-                    break;
-                case '.exe':
-                    t = 9;
-                    break;
-                case '.ini':
-                    t = 10;
-                    break;
-                case '.txt':
-                    t = 11;
-                    break;
-                case '.docx':
-                    t = 12;
-                    break;
-                case '.pdf':
-                    t = 13;
-                    break;
-            }
-            if ("1" == response.filelist[i].isdir) {
-                t = 0;
-                file_info.m_file_isdir = "1";
-            }
-
-            file_info.m_file_type = type[t];
-
-            /*文件时间处理*/
-            file_info.m_file_time = (new Date((response.filelist[i].mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
-
-            /*文件大小处理*/
-            if (response.filelist[i].size < 1024) {
-                file_info.m_file_size = response.filelist[i].size + ' B'
-            }
-            else if (response.filelist[i].size < 1024 * 1024) {
-                file_info.m_file_size = (response.filelist[i].size / 1024).toFixed(2) + ' KB'
-            }
-            else if (response.filelist[i].size < 1024 * 1024 * 1024) {
-                file_info.m_file_size = (response.filelist[i].size / (1024 * 1024)).toFixed(2) + ' MB'
-            }
-            else if (response.filelist[i].size < 1024 * 1024 * 1024 * 1024) {
-                file_info.m_file_size = (response.filelist[i].size / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
-            }
-            if (1 == response.filelist[i].isdir) {
-                file_info.m_file_size = "";
-            }
-
-            /*文件图标处理*/
-            file_info.m_file_icon = icon[t];
-
-            /*文件路径处理*/
-            file_info.m_file_path = response.filelist[i].path;
-
-            /*文件fid*/
-            file_info.m_file_fid = response.filelist[i].fid;
-
-            file_info_list.push(file_info);
-            vm.test_ = file_info;
+            vm.file_list_ = file_info_list;
         }
-        vm.file_list_ = file_info_list;
+    }
+    else
+    {
+        vm.file_list_ = [];
     }
 })
 
@@ -374,3 +407,4 @@ function download(item) {
         console.error(err);
     });
 }
+

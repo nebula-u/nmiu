@@ -1,5 +1,6 @@
 #app {
-    background-color: #e6eceb;
+    background-color: #e6eceba1;
+    /* background-color: white; */
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -10,14 +11,14 @@
 .menu {
     width: 40px;
     height: 100vh;
-    background-color: #cfddda;
-
+    /* background-color: #cfddda; */
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.menu .menu-items{
+.menu .menu-items {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,11 +26,13 @@
 }
 
 .menu .menu-items img {
-    height: 28px;
-    width: 28px;
+    height: 21px;
+    width: 21px;
     margin-top: 20px;
-    cursor: pointer;
     user-select: none;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 .menu .menu-items img:hover {
@@ -175,7 +178,7 @@
     flex-direction: row;
 }
 
-.oprations .left{
+.oprations .left {
     width: 150px;
     border-radius: 5px;
 
@@ -185,22 +188,22 @@
     align-items: center;
 }
 
-.oprations .left img{
+.oprations .left img {
     width: 20px;
     height: 20px;
     background-color: transparent;
 }
 
-.oprations .path-docker{
+.oprations .path-docker {
     flex: 2;
     background-color: rgb(255, 255, 255);
     margin-top: 2px;
     margin-bottom: 2px;
     margin-right: 10px;
     border-radius: 5px;
-} 
+}
 
-.oprations .search{
+.oprations .search {
     flex: 1;
     background-color: rgb(255, 255, 255);
     margin-top: 2px;
@@ -223,7 +226,7 @@
     border-bottom: 1px solid rgb(211, 211, 211);
 }
 
-.table-header .select-all{
+.table-header .select-all {
     width: 40px;
     display: flex;
     flex-direction: row;
@@ -231,19 +234,19 @@
     align-items: center;
 }
 
-.table-header .name{
+.table-header .name {
     flex: 3;
 }
 
-.table-header .date{
+.table-header .date {
     flex: 2;
 }
 
-.table-header .type{
+.table-header .type {
     flex: 1;
 }
 
-.table-header .size{
+.table-header .size {
     flex: 1;
 }
 
@@ -282,23 +285,27 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
+    user-select: none;
 }
 
-.file-items .item .icon{
+.file-items .item:hover {
+    background-color: #e6eceb;
+}
+
+.file-items .item .icon {
     width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.file-items .item .icon img{
+.file-items .item .icon img {
     width: 12px;
     height: 12px;
 }
 
-.file-items .item .file-name{
+.file-items .item .file-name {
     flex: 3;
-    cursor: pointer;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */
     text-overflow: ellipsis;
@@ -307,7 +314,7 @@
     /* 禁止换行 */
 }
 
-.file-items .item .modify-date{
+.file-items .item .modify-date {
     flex: 2;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */
@@ -317,7 +324,7 @@
     /* 禁止换行 */
 }
 
-.file-items .item .file-type{
+.file-items .item .file-type {
     flex: 1;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */
@@ -327,7 +334,7 @@
     /* 禁止换行 */
 }
 
-.file-items .item .file-size{
+.file-items .item .file-size {
     flex: 1;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */
@@ -335,6 +342,37 @@
     /* 显示省略符号来代表被修剪的文本 */
     white-space: nowrap;
     /* 禁止换行 */
+}
+
+.context-menu {
+    font-size: small;
+    border-radius: 5px;
+    position: absolute;
+    /* 绝对定位 */
+    background-color: white;
+    /* 背景颜色为白色 */
+    border: 1px solid #ccc;
+    /* 边框颜色 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    /* 阴影效果 */
+    z-index: 1000;
+    /* 确保菜单在最上层 */
+    width: 150px;
+}
+
+.context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.context-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.context-menu ul li:hover {
+    background-color: #eee;
 }
 
 .download {
@@ -358,7 +396,7 @@
     border-bottom: 1px solid rgb(211, 211, 211);
 }
 
-.download .header .select-all{
+.download .header .select-all {
     width: 40px;
     display: flex;
     flex-direction: row;
@@ -366,23 +404,23 @@
     align-items: center;
 }
 
-.download .header .name{
+.download .header .name {
     flex: 2;
 }
 
-.download .header .size{
+.download .header .size {
     flex: 1;
 }
 
-.download .header .status{
+.download .header .status {
     flex: 1;
 }
 
-.download .header .process{
+.download .header .process {
     flex: 2;
 }
 
-.downloading-files{
+.downloading-files {
     flex: 1;
     /* background-color: azure; */
     overflow: auto;
@@ -390,7 +428,7 @@
     align-items: stretch;
 }
 
-.downloading-files .item{
+.downloading-files .item {
     height: 40px;
     background-color: transparent;
     border-bottom: 1px solid rgb(235, 235, 235);
@@ -401,7 +439,7 @@
     align-items: stretch;
 }
 
-.downloading-files .item .file-name{
+.downloading-files .item .file-name {
     margin-left: 40px;
     flex: 2;
     cursor: pointer;
@@ -413,7 +451,7 @@
     /* 禁止换行 */
 }
 
-.downloading-files .item .file-size{
+.downloading-files .item .file-size {
     flex: 1;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */
@@ -423,7 +461,7 @@
     /* 禁止换行 */
 }
 
-.downloading-files .item .file-status{
+.downloading-files .item .file-status {
     flex: 1;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */
@@ -433,7 +471,7 @@
     /* 禁止换行 */
 }
 
-.downloading-files .item .file-process{
+.downloading-files .item .file-process {
     flex: 2;
     overflow: hidden;
     /* 对超出容器的部分强制截取，高度不确定则换行 */

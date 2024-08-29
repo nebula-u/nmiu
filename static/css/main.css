@@ -172,13 +172,13 @@
     align-items: stretch;
 }
 
-.oprations {
+.operations {
     height: 40px;
     display: flex;
     flex-direction: row;
 }
 
-.oprations .left {
+.operations .left {
     width: 150px;
     border-radius: 5px;
 
@@ -188,13 +188,20 @@
     align-items: center;
 }
 
-.oprations .left img {
+.operations .left img {
+    padding: 8px;
+    border-radius: 5px;
     width: 20px;
     height: 20px;
     background-color: transparent;
 }
 
-.oprations .path-docker {
+.operations .left img:hover {
+    background-color: rgb(190, 190, 190);
+    transition: background-color 0.3s;
+}
+
+.operations .path-docker {
     flex: 2;
     background-color: rgb(255, 255, 255);
     margin-top: 2px;
@@ -203,7 +210,7 @@
     border-radius: 5px;
 }
 
-.oprations .search {
+.operations .search {
     flex: 1;
     background-color: rgb(255, 255, 255);
     margin-top: 2px;

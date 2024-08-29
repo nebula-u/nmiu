@@ -16,7 +16,7 @@ const icon = [
     '../icon/file-type/folder.svg',         // 0：文件夹
     '../icon/file-type/jpg.svg',            // 1：图片
     '../icon/file-type/mp3.svg',            // 2：音频
-    '../icon/file-type/mp4.svg',         // 3：视频
+    '../icon/file-type/mp4.svg',            // 3：视频
     '../icon/file-type/zip.svg',            // 4：压缩文件
     '../icon/file-type/file.svg',           // 5：脚本文件
     '../icon/file-type/file.svg',            // 6：源文件
@@ -92,7 +92,9 @@ const app = createApp({
         GetFileList_(requestPath, fid, isdir) {
             this.currentDisplay_ = 'netdiskPage';
             if (isdir == "1") {
-                console.log(requestPath);
+                backStack.push(currentDirectory);
+                currentDirectory = requestPath;
+                forwardStack = [];
                 GetFileList(requestPath);
             }
             else {
@@ -101,7 +103,6 @@ const app = createApp({
         },
         NetdiskDisplay() {
             this.currentDisplay_ = 'netdiskPage';
-            // this.GetFileList_('/', '', '1');
         },
         MovieDisplay() {
             this.currentDisplay_ = 'moviePage';
@@ -135,20 +136,28 @@ const app = createApp({
             mainWin.close();
         },
 
-        goBack() {
+        GoBack() {
             if (backStack.length > 0) {
                 forwardStack.push(currentDirectory);
                 currentDirectory = backStack.pop();
                 GetFileList(currentDirectory);
             }
+            console.log("backStack: " + backStack);
+            console.log("forwardStack: " + forwardStack);
         },
 
-        goForward() {
+        GoForward() {            
             if (forwardStack.length > 0) {
                 backStack.push(currentDirectory);
                 currentDirectory = forwardStack.pop();
                 GetFileList(currentDirectory);
             }
+            console.log("backStack: " + backStack);
+            console.log("forwardStack: " + forwardStack);
+        },
+
+        Refresh() {
+            GetFileList(currentDirectory);
         },
 
         showContextMenu(event, index) {
@@ -191,6 +200,7 @@ function GetFileList(requestPath) {
 }
 
 GetFileList("/");
+currentDirectory = "/";
 
 function GetDlink(fid) {
     ipcRenderer.invoke("get-file-dlink", fid);
@@ -223,8 +233,7 @@ ipcRenderer.on('pan-auth-status', (event, data) => {
 
 ipcRenderer.on('file-list', (event, data) => {
     const response = JSON.parse(data);
-    if('filelist' in response)
-    {
+    if ('filelist' in response) {
         if ("true" == response.result) {
             let file_info_list = [];
             for (var i = 0; i < response.filelist.length; i++) {
@@ -241,10 +250,10 @@ ipcRenderer.on('file-list', (event, data) => {
                     m_file_fid: "",
                     m_file_isdir: "",
                 }
-    
+
                 /*文件名处理*/
                 file_info.m_file_name = response.filelist[i].filename;
-    
+
                 /*文件类型处理*/
                 const extname = path.extname(file_info.m_file_name).toLowerCase();
                 var t = 0;
@@ -297,12 +306,12 @@ ipcRenderer.on('file-list', (event, data) => {
                     t = 0;
                     file_info.m_file_isdir = "1";
                 }
-    
+
                 file_info.m_file_type = type[t];
-    
+
                 /*文件时间处理*/
                 file_info.m_file_time = (new Date((response.filelist[i].mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
-    
+
                 /*文件大小处理*/
                 if (response.filelist[i].size < 1024) {
                     file_info.m_file_size = response.filelist[i].size + ' B'
@@ -319,24 +328,23 @@ ipcRenderer.on('file-list', (event, data) => {
                 if (1 == response.filelist[i].isdir) {
                     file_info.m_file_size = "";
                 }
-    
+
                 /*文件图标处理*/
                 file_info.m_file_icon = icon[t];
-    
+
                 /*文件路径处理*/
                 file_info.m_file_path = response.filelist[i].path;
-    
+
                 /*文件fid*/
                 file_info.m_file_fid = response.filelist[i].fid;
-    
+
                 file_info_list.push(file_info);
                 vm.test_ = file_info;
             }
             vm.file_list_ = file_info_list;
         }
     }
-    else
-    {
+    else {
         vm.file_list_ = [];
     }
 })

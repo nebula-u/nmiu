@@ -27,6 +27,7 @@ const icon = [
     '../icon/file-type/txt.svg',            // 11：文本文件
     '../icon/file-type/doc.svg',            // 12：word文件
     '../icon/file-type/pdf.svg',            // 13：pdf文件
+    '../icon/file-type/file.svg',            // 14：文件
 ]
 
 const type = [
@@ -44,6 +45,7 @@ const type = [
     '文本文件',            // 11：文本文件
     '文档',            // 12：word文件
     '文档',            // 13：pdf文件
+    '文件',             // 14：文件
 ]
 
 const app = createApp({
@@ -243,7 +245,7 @@ ipcRenderer.on('file-list', (event, data) => {
                     m_file_size: "",
                     m_file_type: "",   // 0=文件夹；1=图片；2=音频；3=视频；4=压缩文件；
                     // 5=脚本文件；6=源文件；7=头文件；8=库文件
-                    // 9=应用程序；10=配置文件；11=文本文件；12=WORD文件；13=PDF文件
+                    // 9=应用程序；10=配置文件；11=文本文件；12=WORD文件；13=PDF文件；14=文件
                     m_file_path: "",
                     m_file_thumbs: "",
                     m_file_icon: "",
@@ -272,6 +274,8 @@ ipcRenderer.on('file-list', (event, data) => {
                         t = 3;
                         break;
                     case '.zip':
+                    case '.rar':
+                    case '7z':
                         t = 4;
                         break;
                     case '.bat':
@@ -300,6 +304,9 @@ ipcRenderer.on('file-list', (event, data) => {
                         break;
                     case '.pdf':
                         t = 13;
+                        break;
+                    default:
+                        t = 14;
                         break;
                 }
                 if ("1" == response.filelist[i].isdir) {

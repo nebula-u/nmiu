@@ -23,10 +23,12 @@ client.on('error', (err)=>{
     global.connectStatus = "false";
 });
 client.on('data', (data)=>{
+    // console.log(data.toString());
     if (8 == data.length){
         recvSize = 0;
         recvData = "";
         expectedSize = data.readBigInt64LE(0);
+        console.log("expected size: " + expectedSize);
     }
     else
     {
@@ -130,6 +132,7 @@ ipcMain.handle('auth-qrcode-request', async(event, args) => {
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
+// 获取网盘授权状态
 ipcMain.handle('auth-status-request', async(event, args) => {
     icd.clientToServer001.operation = 'auth-status-request';
     icd.clientToServer001.password = '';
@@ -139,6 +142,7 @@ ipcMain.handle('auth-status-request', async(event, args) => {
     client.write(JSON.stringify(icd.clientToServer001));
 });
 
+// 获取二维码登陆授权状态
 ipcMain.handle('auth-login-status-resuest', async(event, args) => {
     icd.clientToServer001.operation = 'auth-login-status-resuest';
     icd.clientToServer001.password = '';

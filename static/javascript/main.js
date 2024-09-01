@@ -201,9 +201,6 @@ function GetFileList(requestPath) {
     ipcRenderer.invoke("get-file-list", requestPath);
 }
 
-GetFileList("/");
-currentDirectory = "/";
-
 function GetDlink(fid) {
     ipcRenderer.invoke("get-file-dlink", fid);
 }
@@ -221,11 +218,14 @@ ipcRenderer.on('loginStatus', (event, data) => {
 
 loginSessionid();
 
+// 接收网盘的授权状态
 ipcRenderer.on('pan-auth-status', (event, data) => {
     const response = JSON.parse(data);
     if ("true" == response.result) {
         vm.cloudStatus_ = "已授权";
         isAuthed = true;
+        GetFileList("/");
+        currentDirectory = "/";
     }
     else {
         vm.cloudStatus_ = "未授权";
@@ -371,7 +371,20 @@ ipcRenderer.on('dlink-list', (event, data) => {
             }
             dlink_info.m_file_name = response.dlinklist[i].filename;
             dlink_info.m_file_dlink = response.dlinklist[i].dlink;
-            dlink_info.m_file_size = '2.00Gb';
+            dlink_info.m_file_size = response.dlinklist[i].size;
+            if (response.dlinklist[i].size < 1024) {
+                dlink_info.m_file_size = response.dlinklist[i].size + ' B'
+            }
+            else if (response.dlinklist[i].size < 1024 * 1024) {
+                dlink_info.m_file_size = (response.dlinklist[i].size / 1024).toFixed(2) + ' KB'
+            }
+            else if (response.dlinklist[i].size < 1024 * 1024 * 1024) {
+                dlink_info.m_file_size = (response.dlinklist[i].size / (1024 * 1024)).toFixed(2) + ' MB'
+            }
+            else if (response.dlinklist[i].size < 1024 * 1024 * 1024 * 1024) {
+                dlink_info.m_file_size = (response.dlinklist[i].size / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
+            }
+            
             dlink_info.m_file_status = '等待下载';
             dlink_info.m_file_process = "";
             vm.download_file_list_.push(dlink_info);

@@ -4,7 +4,7 @@ const icd = require('./icd');
 
 function handleData(data) {
     fs.appendFile('./log.txt', "\n--------------------------------\n" + data, (err) => {
-        console.log("error:" + err);
+        // console.log("error:" + err);
     });
     const response = JSON.parse(data);
     if ("login-status-pw" == response.type) {

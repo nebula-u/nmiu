@@ -10,9 +10,7 @@ const net       = require('net');
 const serverHost = config['server-host'];
 const serverPort = config['server-port'];
 const client = new net.Socket();
-let   recvSize = 0;
 let   recvData = "";
-let   expectedSize = 0;
 
 client.connect(serverPort, serverHost, ()=>{
     console.log('connect to server: success');
@@ -23,21 +21,12 @@ client.on('error', (err)=>{
     global.connectStatus = "false";
 });
 client.on('data', (data)=>{
-    // console.log(data.toString());
-    if (8 == data.length){
-        recvSize = 0;
-        recvData = "";
-        expectedSize = data.readBigInt64LE(0);
-        console.log("expected size: " + expectedSize);
-    }
-    else
-    {
-        recvData = recvData+data;
-        recvSize = recvSize+data.toString().length;
-        if(recvSize == expectedSize){
-            handler.handleData(recvData);
-        }
-    }
+    recvData += data;
+    let packets = recvData.split('#end')
+    recvData = packets.pop();
+    packets.forEach(package => {
+        handler.handleData(package);
+    })
 });
 
 function createAuthWindow() {

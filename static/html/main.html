@@ -43,51 +43,73 @@
                 </div>
             </div>
             <div v-if="currentDisplay_=='netdiskPage'" class="netdisk">
-                <div class="operations">
-                    <div class="left">
-                        <img src="../icon/back.svg" alt="" srcset="" class="back" @click="GoBack">
-                        <img src="../icon/forword.svg" alt="" srcset="" class="forword" @click="GoForward">
-                        <img src="../icon/refresh.svg" alt="" srcset="" class="refresh" @click="Refresh">
-                    </div>
-                    <div class="path-docker"></div>
-                    <input type="text" name="" id="" class="search" placeholder="搜索">
-                </div>
-                <div class="table-header">
-                    <div class="select-all">
-                        <input type="checkbox" name="" id="">
-                    </div>
-                    <div class="name">名称</div>
-                    <div class="date">修改日期</div>
-                    <div class="type">类型</div>
-                    <div class="size">大小</div>
-                </div>
-                <div class="file-items">
-                    <li class="item" 
-                    v-for="(file, index) in file_list_"
-                    :key="index"
-                    :style="{backgroundColor: selectedFile_ == index ? '#cfddda' : ''}"
-                    @contextmenu.prevent="showContextMenu($event, index)" 
-                    @click="SelectFile_(index)"
-                    @dblclick="GetFileList_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">
-                        <div class="icon">
-                            <img :src="file.m_file_icon" alt="" srcset="">
+                <div v-if="(netdisk_current_display_ == 'netdisk-filelist')" class="netdisk-filelist">
+                    <div class="operations">
+                        <div class="left">
+                            <img src="../icon/back.svg" alt="" srcset="" class="back" @click="GoBack">
+                            <img src="../icon/forword.svg" alt="" srcset="" class="forword" @click="GoForward">
+                            <img src="../icon/refresh.svg" alt="" srcset="" class="refresh" @click="Refresh">
                         </div>
-                        <div class="file-name">
-                            {{file.m_file_name}}</div>
-                        <div class="modify-date">{{file.m_file_time}}</div>
-                        <div class="file-type">{{file.m_file_type}}</div>
-                        <div class="file-size">{{file.m_file_size}}</div>
-                    </li>
-                    <div v-if="menuVisible_" :style="{ top: `${menuY_}px`, left: `${menuX_}px` }" class="context-menu">
-                        <ul>
-                            <li>查看</li>
-                            <li>复制至</li>
-                            <li>剪切至</li>
-                            <li>删除</li>
-                            <li>下载</li>
-                            <li>属性</li>
-                        </ul>
+                        <div class="path-docker"></div>
+                        <input type="text" name="" id="" class="search" placeholder="搜索">
                     </div>
+                    <div class="table-header">
+                        <div class="select-all">
+                            <input type="checkbox" name="" id="">
+                        </div>
+                        <div class="name">名称</div>
+                        <div class="date">修改日期</div>
+                        <div class="type">类型</div>
+                        <div class="size">大小</div>
+                    </div>
+                    <div class="file-items">
+                        <li class="item" 
+                        v-for="(file, index) in file_list_"
+                        :key="index"
+                        :style="{backgroundColor: selectedFile_ == index ? '#cfddda' : ''}"
+                        @contextmenu.prevent="showContextMenu($event, index)" 
+                        @click="SelectFile_(index)"
+                        @dblclick="OpenFileOrDir_(file.m_file_path, file.m_file_fid, file.m_file_isdir)">
+                            <div class="icon">
+                                <img :src="file.m_file_icon" alt="" srcset="">
+                            </div>
+                            <div class="file-name">
+                                {{file.m_file_name}}</div>
+                            <div class="modify-date">{{file.m_file_time}}</div>
+                            <div class="file-type">{{file.m_file_type}}</div>
+                            <div class="file-size">{{file.m_file_size}}</div>
+                        </li>
+                        <div v-if="menuVisible_" :style="{ top: `${menuY_}px`, left: `${menuX_}px` }" class="context-menu" id="context-menu">
+                            <ul>
+                                <li @click="OpenFileOrDir_">打开</li>
+                                <li @click="CopyTo">复制至</li>
+                                <li @click="MoveTo">剪切至</li>
+                                <li @click="DeleteFile">删除</li>
+                                <li @click="ReName">重命名</li>
+                                <li @click="DownloadFile_">下载</li>
+                                <li @click="DisplayAttribute">属性</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="(netdisk_current_display_ == 'netdisk-fileinfo')" class="netdisk-fileinfo">
+                    <div class="fileinfo-top-bar">
+                        <div class="fileinfo-top-bar-back">
+                            <img src="../icon/back.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div v-if="(netdisk_current_display_ == 'netdisk-openimage')" class="netdisk-openimage">
+                    图片显示
+                </div>
+                <div v-if="(netdisk_current_display_ == 'netdisk-openmovie')" class="netdisk-openmovie">
+                    看视频
+                </div>
+                <div v-if="(netdisk_current_display_ == 'netdisk-openmusic')" class="netdisk-openmusic">
+                    听音乐
+                </div>
+                <div v-if="(netdisk_current_display_ == 'netdisk-openpdf')" class="netdisk-openpdf">
+                    查看pdf
                 </div>
             </div>
             <div v-if="(currentDisplay_=='moviePage')">
@@ -120,6 +142,7 @@
                 </div>
             </div>
         </div>
+        <div v-if="notification_visible_" :style="{backgroundColor: notification_background_}" class="notification">{{notification_message_}}</div>
     </div>
     <script src="../javascript/main.js"></script>
 </body>

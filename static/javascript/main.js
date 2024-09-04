@@ -7,6 +7,8 @@ const fs = require('fs');
 
 var isLoggedIn = false;
 var isAuthed = false;
+var cur_selected_file_or_dir;
+var notify_timeout;
 
 var currentDirectory = "";
 var backStack = [];
@@ -61,6 +63,10 @@ const app = createApp({
             menuX_: 0,
             menuY_: 0,
             selectedFile_: null,
+            notification_message_: "",
+            notification_visible_: false,
+            notification_background_: "",
+            netdisk_current_display_: "netdisk-filelist",
         }
     },
     methods: {
@@ -91,16 +97,18 @@ const app = createApp({
             }
         },
 
-        GetFileList_(requestPath, fid, isdir) {
+        OpenFileOrDir_(path, fid, isdir) {
             this.currentDisplay_ = 'netdiskPage';
             if (isdir == "1") {
                 backStack.push(currentDirectory);
-                currentDirectory = requestPath;
+                currentDirectory = path;
                 forwardStack = [];
-                GetFileList(requestPath);
+                GetFileList(path);
             }
             else {
-                GetDlink(fid);
+                Notify("暂不支持打开文件，请下载后查看", "error");
+                // this.netdisk_current_display_ = "netdisk-fileinfo";
+                // GetDlink(fid);
             }
         },
         NetdiskDisplay() {
@@ -148,14 +156,12 @@ const app = createApp({
             console.log("forwardStack: " + forwardStack);
         },
 
-        GoForward() {            
+        GoForward() {
             if (forwardStack.length > 0) {
                 backStack.push(currentDirectory);
                 currentDirectory = forwardStack.pop();
                 GetFileList(currentDirectory);
             }
-            console.log("backStack: " + backStack);
-            console.log("forwardStack: " + forwardStack);
         },
 
         Refresh() {
@@ -164,9 +170,29 @@ const app = createApp({
 
         showContextMenu(event, index) {
             this.menuVisible_ = true;
-            this.selectedFile_ = index;
-            this.menuX_ = event.clientX;
-            this.menuY_ = event.clientY;
+            this.SelectFile_(index);
+
+            // 获取初始点击位置
+            let x = event.clientX;
+            let y = event.clientY;
+
+            // 获取窗口的宽度和高度
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+
+            // 如果菜单的右边缘超出了窗口的右边缘，将菜单的X坐标向左调整
+            if (x + 150 > winWidth) {
+                x = winWidth - 155;
+            }
+
+            // 如果菜单的下边缘超出了窗口的下边缘，将菜单的Y坐标向上调整
+            if (y + 233 > winHeight) {
+                y = winHeight - 238;
+            }
+
+            // 设置最终的菜单位置
+            this.menuX_ = x;
+            this.menuY_ = y;
         },
 
         // 隐藏右键菜单
@@ -176,7 +202,17 @@ const app = createApp({
 
         SelectFile_(index) {
             this.selectedFile_ = index;
+            cur_selected_file_or_dir = this.file_list_[index];
         },
+
+        DownloadFile_() {
+            if ("1" == cur_selected_file_or_dir.m_file_isdir) {
+                Notify("暂不支持文件夹下载", "error");
+            }
+            else {
+                GetDlink(cur_selected_file_or_dir.m_file_fid);
+            }
+        }
     },
     mounted() {
         // 在组件挂载时添加全局点击事件监听器，用于隐藏右键菜单
@@ -226,6 +262,7 @@ ipcRenderer.on('pan-auth-status', (event, data) => {
         isAuthed = true;
         GetFileList("/");
         currentDirectory = "/";
+        Notify("网盘已授权", "success");
     }
     else {
         vm.cloudStatus_ = "未授权";
@@ -360,7 +397,6 @@ ipcRenderer.on('dlink-list', (event, data) => {
     const response = JSON.parse(data);
     console.log(response);
     if ("true" == response.result) {
-        // let dlink_list = [];        
         for (var i = 0; i < response.dlinklist.length; i++) {
             let dlink_info = {
                 m_file_name: "",
@@ -384,7 +420,7 @@ ipcRenderer.on('dlink-list', (event, data) => {
             else if (response.dlinklist[i].size < 1024 * 1024 * 1024 * 1024) {
                 dlink_info.m_file_size = (response.dlinklist[i].size / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
             }
-            
+
             dlink_info.m_file_status = '等待下载';
             dlink_info.m_file_process = "";
             vm.download_file_list_.push(dlink_info);
@@ -409,7 +445,7 @@ function handleRedirect(response, item) {
             console.error(err);
         });
     } else {
-        const file = fs.createWriteStream(item.m_file_name);
+        const file = fs.createWriteStream("./download/" + item.m_file_name);
         let downloadedBytes = 0;
         const totalBytes = parseInt(response.headers['content-length'], 10);
         console.log("total: " + totalBytes);
@@ -427,6 +463,9 @@ function handleRedirect(response, item) {
 }
 
 function download(item) {
+    console.log(item.m_file_name.length);
+    let message = item.m_file_name.length > 20 ? (item.m_file_name.substring(0, 10) + "...") : item.m_file_name;
+    Notify("文件 " + message + " 已开始下载", "normal")
     item.m_file_status = "下载中";
     console.log(item.m_file_dlink);
     https.get(item.m_file_dlink, options, (response) => {
@@ -436,3 +475,29 @@ function download(item) {
     });
 }
 
+function Notify(message, type) {
+    vm.notification_message_ = "";
+    vm.notification_visible_ = false;
+    vm.notification_background_ = "";
+    clearTimeout(notify_timeout);
+    vm.notification_message_ = message;
+    vm.notification_visible_ = true;
+    if (type == "success") {
+        vm.notification_background_ = "#4CAF50";
+    }
+
+    else if (type == "error") {
+        vm.notification_background_ = "#f44336";
+    }
+
+    else if (type == "normal") {
+        vm.notification_background_ = "#2196F3";
+    }
+
+    notify_timeout = setTimeout(() => {
+        vm.notification_message_ = "";
+        vm.notification_visible_ = false;
+        vm.notification_background_ = "";
+
+    }, 4000);
+}

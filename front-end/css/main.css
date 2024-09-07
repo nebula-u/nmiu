@@ -1,6 +1,5 @@
 #app {
     background-color: #e6eceba1;
-    /* background-color: white; */
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -11,7 +10,6 @@
 .menu {
     width: 40px;
     height: 100vh;
-    /* background-color: #cfddda; */
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -58,34 +56,7 @@
 
 .upsearch {
     flex: 1;
-    /* background-color: white; */
     -webkit-app-region: drag;
-}
-
-.login-status {
-    width: 120px;
-    background-color: transparent;
-    line-height: 30px;
-    user-select: none;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.user-name {
-    text-align: center;
-    font-size: small;
-    cursor: pointer;
-}
-
-.head {
-    height: 20px;
-    width: 20px;
-    border-radius: 10px;
-    margin-right: 10px;
-    cursor: pointer;
 }
 
 .cloud-service {

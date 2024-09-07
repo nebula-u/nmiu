@@ -114,15 +114,7 @@ const app = createApp({
         NetdiskDisplay() {
             this.currentDisplay_ = 'netdiskPage';
         },
-        MovieDisplay() {
-            this.currentDisplay_ = 'moviePage';
-        },
-        MusicDisplay() {
-            this.currentDisplay_ = 'musicPage';
-        },
-        ImageDisplay() {
-            this.currentDisplay_ = 'imagePage';
-        },
+
         DownloadDisplay() {
             this.currentDisplay_ = 'downloadPage';
         },
@@ -221,14 +213,6 @@ const app = createApp({
 });
 const vm = app.mount("#app");
 
-async function loginSessionid() {
-    const result = await ipcRenderer.invoke('login-sessionid');
-}
-
-function createLoginWindow() {
-    ipcRenderer.invoke('create-login-window');
-}
-
 function createAuthWindow() {
     ipcRenderer.invoke('create-auth-window');
 }
@@ -252,12 +236,10 @@ ipcRenderer.on('loginStatus', (event, data) => {
     }
 });
 
-loginSessionid();
-
 // 接收网盘的授权状态
-ipcRenderer.on('pan-auth-status', (event, data) => {
+ipcRenderer.on('pan-auth-result', (event, data) => {
     const response = JSON.parse(data);
-    if ("true" == response.result) {
+    if ("true" == response.PanAuthLoginResult) {
         vm.cloudStatus_ = "已授权";
         isAuthed = true;
         GetFileList("/");

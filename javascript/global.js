@@ -3,9 +3,8 @@ var connectStatus = false;
 var isRequestLogin = false;
 var sessionId = "";
 var mainWindow;
-var loginWindow;
 var authWindow;
-
+var device_code;
 
 module.exports = {
     loginStatus,
@@ -13,6 +12,6 @@ module.exports = {
     isRequestLogin,
     sessionId,
     mainWindow,
-    loginWindow,
     authWindow,
+    device_code,
 }

@@ -8,13 +8,17 @@
 </head>
 <body id="app">
     <div class="window-control">
-        <div class="drag">扫码登录</div>
+        <div class="drag"></div>
         <div class="close" @click="closeWin">
             <img src="../icon/close.svg" alt="">
         </div>
     </div>
+    <div class="introduce">微信/百度网盘 扫码授权</div>
     <div class="QRCode">
         <img v-bind:src="imageUrl_" alt="">
+    </div>
+    <div class="auth-confirm">
+        <p @click="GetAuthLoginStatus">我已授权</p>
     </div>
     <script src="../javascript/auth.js"></script>
 </body>

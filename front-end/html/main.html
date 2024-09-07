@@ -13,19 +13,12 @@
         <div class="menu">
             <div class="menu-items">
                 <img src="../icon/files.svg" alt="" srcset="" class="item" @click="NetdiskDisplay">
-                <img src="../icon/movie.svg" alt="" srcset="" class="item" @click="MovieDisplay">
-                <img src="../icon/music.svg" alt="" srcset="" class="item" @click="MusicDisplay">
-                <img src="../icon/picture.svg" alt="" srcset="" class="item" @click="ImageDisplay">
                 <img src="../icon/downloadandupload.svg" alt="" srcset="" class="item" @click="DownloadDisplay">
             </div>
         </div>
         <div class="main-content">
             <div class="window-controls">
                 <div class="upsearch"></div>
-                <div class="login-status">
-                    <img src="../img/my.jpg" class="head" @click="OpenUserInfo_" alt="">
-                    <div class="user-name" @click="OpenUserInfo_">{{uname_}}</div>
-                </div>
                 <div class="cloud-service">
                     <img src="../icon/cloud.svg" class="cloud-icon" @click="OpenAuthInfo_" alt="">
                     <div class="cloud-status" @click="OpenAuthInfo_">{{cloudStatus_}}</div>
@@ -111,15 +104,6 @@
                 <div v-if="(netdisk_current_display_ == 'netdisk-openpdf')" class="netdisk-openpdf">
                     查看pdf
                 </div>
-            </div>
-            <div v-if="(currentDisplay_=='moviePage')">
-                电影
-            </div>
-            <div v-if="(currentDisplay_=='musicPage')">
-                音乐
-            </div>
-            <div v-if="(currentDisplay_=='imagePage')">
-                图像
             </div>
             <div v-if="(currentDisplay_=='downloadPage')" class="download">
                 <div class="operation"></div>

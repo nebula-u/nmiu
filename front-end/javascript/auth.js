@@ -14,6 +14,10 @@ const app = createApp({
             clearInterval(getAuthLoginStatusTimer);
             const authWin = remote.getCurrentWindow();
             authWin.close();
+        },
+
+        GetAuthLoginStatus() {
+            ipcRenderer.invoke('auth-status-request');
         }
     }
 });
@@ -26,24 +30,23 @@ ipcRenderer.on('qrcode-url', (event, data) => {
     const response = JSON.parse(data);
     if("true" == response.result)
     {
-        vm.imageUrl_ = response.QRCodeUrl;
-        getAuthLoginStatusTimer = setInterval(getAuthLoginStatus, 6000);
+        // vm.imageUrl_ = response.QRCodeUrl;
+        vm.imageUrl_ = "../img/QRAuthSuccess.svg";
     }
     else
     {
         vm.imageUrl_ = "../img/QRCodeFail.png";
     }
-})
+});
 
-function getAuthLoginStatus() {
-    ipcRenderer.invoke('auth-login-status-resuest');
-}
-
-ipcRenderer.on('pan-auth-login-result', (event, data) => {
+ipcRenderer.on('pan-auth-result', (event, data) => {
     const response = JSON.parse(data);
     if("true" == response.PanAuthLoginResult)
     {
         vm.imageUrl_ = "../img/QRAuthSuccess.svg";
-        clearInterval(getAuthLoginStatusTimer);
+        setTimeout(() => {
+            remote.getCurrentWindow().close();
+        }, 1000);
+        
     }
 })

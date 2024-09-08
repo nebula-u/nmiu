@@ -61,7 +61,7 @@
 
 .cloud-service {
     user-select: none;
-    width: 80px;
+    width: 100px;
 
     display: flex;
     flex-direction: row;
@@ -81,6 +81,10 @@
     text-align: center;
     font-size: small;
     cursor: pointer;
+    text-overflow: ellipsis;
+    /* 显示省略符号来代表被修剪的文本 */
+    white-space: nowrap;
+    /* 禁止换行 */
 }
 
 .win-ctrl {
@@ -150,7 +154,6 @@
 
 .operations .left {
     width: 150px;
-    border-radius: 5px;
 
     display: flex;
     flex-direction: row;
@@ -158,12 +161,22 @@
     align-items: center;
 }
 
+.operations .left div {
+    height: 30px;
+    width: 30px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .operations .left img {
     height: 20px;
     width: 20px;
 }
 
-.operations .left img:hover {
+.operations .left div:hover {
     background-color: rgb(190, 190, 190);
     transition: background-color 0.3s;
 }

@@ -15,6 +15,12 @@ var ipcPanStatusResult = {
     PanAuthLoginResult: "",
 }
 
+var ipcPanUserInfo = {
+    username: "",
+    headlink: "",
+    vip_type: "",
+}
+
 var ipcFileList = {
     result: "",
     filelist: "",
@@ -29,5 +35,6 @@ module.exports = {
     ipcLoginResult,
     ipcPanStatusResult,
     ipcFileList,
-    ipcDLinkList
+    ipcDLinkList,
+    ipcPanUserInfo
 }

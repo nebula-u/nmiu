@@ -30,8 +30,7 @@ ipcRenderer.on('qrcode-url', (event, data) => {
     const response = JSON.parse(data);
     if("true" == response.result)
     {
-        // vm.imageUrl_ = response.QRCodeUrl;
-        vm.imageUrl_ = "../img/QRAuthSuccess.svg";
+        vm.imageUrl_ = response.QRCodeUrl;
     }
     else
     {
@@ -39,6 +38,7 @@ ipcRenderer.on('qrcode-url', (event, data) => {
     }
 });
 
+// 收到授权结果
 ipcRenderer.on('pan-auth-result', (event, data) => {
     const response = JSON.parse(data);
     if("true" == response.PanAuthLoginResult)
@@ -47,6 +47,8 @@ ipcRenderer.on('pan-auth-result', (event, data) => {
         setTimeout(() => {
             remote.getCurrentWindow().close();
         }, 1000);
-        
+        setTimeout(() => {
+            ipcRenderer.invoke('get-user-info');
+        }, 3000);
     }
 })

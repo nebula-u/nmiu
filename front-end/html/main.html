@@ -20,7 +20,7 @@
             <div class="window-controls">
                 <div class="upsearch"></div>
                 <div class="cloud-service">
-                    <img src="../icon/cloud.svg" class="cloud-icon" @click="OpenAuthInfo_" alt="">
+                    <img class="cloud-icon" v-bind:src="headlink_" @click="OpenAuthInfo_" alt="">
                     <div class="cloud-status" @click="OpenAuthInfo_">{{cloudStatus_}}</div>
                 </div>
                 <div class="win-ctrl">
@@ -39,9 +39,15 @@
                 <div v-if="(netdisk_current_display_ == 'netdisk-filelist')" class="netdisk-filelist">
                     <div class="operations">
                         <div class="left">
-                            <img src="../icon/back.svg" alt="" srcset="" class="back" @click="GoBack">
-                            <img src="../icon/forword.svg" alt="" srcset="" class="forword" @click="GoForward">
-                            <img src="../icon/refresh.svg" alt="" srcset="" class="refresh" @click="Refresh">
+                            <div class="goback-div">
+                                <img src="../icon/back.svg" alt="" srcset="" class="back" @click="GoBack">
+                            </div>
+                            <div class="goforward-div">
+                                <img src="../icon/forword.svg" alt="" srcset="" class="forword" @click="GoForward">
+                            </div>
+                            <div class="gorefresh-div">
+                                <img src="../icon/refresh.svg" alt="" srcset="" class="refresh" @click="Refresh">
+                            </div>
                         </div>
                         <div class="path-docker"></div>
                         <input type="text" name="" id="" class="search" placeholder="搜索">

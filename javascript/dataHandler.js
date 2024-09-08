@@ -41,7 +41,6 @@ function handleData(data) {
     }
 
     if ("pan-auth-status" == response.type) {
-        console.log(response);
         
         if ("true" == response.result) {
             icd.ipcPanStatusResult.result = "true";

@@ -5,6 +5,10 @@ var sessionId = "";
 var mainWindow;
 var authWindow;
 var device_code;
+var user_data = {
+    access_token:"",
+    refresh_token:""
+};
 
 module.exports = {
     loginStatus,
@@ -14,4 +18,5 @@ module.exports = {
     mainWindow,
     authWindow,
     device_code,
+    user_data,
 }

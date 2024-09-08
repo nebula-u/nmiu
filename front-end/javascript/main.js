@@ -56,7 +56,6 @@ const app = createApp({
             uname_: "登录",
             cloudStatus_: "未授权",
             file_list_: [],
-            test_: {},
             currentDisplay_: "netdiskPage",
             download_file_list_: [],
             menuVisible_: false,
@@ -67,6 +66,7 @@ const app = createApp({
             notification_visible_: false,
             notification_background_: "",
             netdisk_current_display_: "netdisk-filelist",
+            headlink_: "../icon/cloud.svg",
         }
     },
     methods: {
@@ -142,10 +142,10 @@ const app = createApp({
             if (backStack.length > 0) {
                 forwardStack.push(currentDirectory);
                 currentDirectory = backStack.pop();
+                console.log(currentDirectory);
+                
                 GetFileList(currentDirectory);
             }
-            console.log("backStack: " + backStack);
-            console.log("forwardStack: " + forwardStack);
         },
 
         GoForward() {
@@ -219,6 +219,7 @@ function createAuthWindow() {
 
 function GetFileList(requestPath) {
     ipcRenderer.invoke("get-file-list", requestPath);
+    vm.file_list_ = [];
 }
 
 function GetDlink(fid) {
@@ -240,11 +241,8 @@ ipcRenderer.on('loginStatus', (event, data) => {
 ipcRenderer.on('pan-auth-result', (event, data) => {
     const response = JSON.parse(data);
     if ("true" == response.PanAuthLoginResult) {
-        vm.cloudStatus_ = "已授权";
-        isAuthed = true;
-        GetFileList("/");
-        currentDirectory = "/";
         Notify("网盘已授权", "success");
+        ipcRenderer.invoke('get-user-info');
     }
     else {
         vm.cloudStatus_ = "未授权";
@@ -252,11 +250,23 @@ ipcRenderer.on('pan-auth-result', (event, data) => {
     }
 });
 
+ipcRenderer.on('pan-user-info', (event, data) => {
+    const response = JSON.parse(data);
+    vm.cloudStatus_ = response.username;
+    vm.headlink_ = response.headlink;
+    isAuthed = true;
+
+    // 后续可在此加上判断
+    currentDirectory = "/";
+    GetFileList("/");
+});
+
 ipcRenderer.on('file-list', (event, data) => {
     const response = JSON.parse(data);
     if ('filelist' in response) {
         if ("true" == response.result) {
             let file_info_list = [];
+            
             for (var i = 0; i < response.filelist.length; i++) {
                 let file_info = {
                     m_file_name: "",
@@ -273,7 +283,7 @@ ipcRenderer.on('file-list', (event, data) => {
                 }
 
                 /*文件名处理*/
-                file_info.m_file_name = response.filelist[i].filename;
+                file_info.m_file_name = response.filelist[i].server_filename;
 
                 /*文件类型处理*/
                 const extname = path.extname(file_info.m_file_name).toLowerCase();
@@ -336,7 +346,7 @@ ipcRenderer.on('file-list', (event, data) => {
                 file_info.m_file_type = type[t];
 
                 /*文件时间处理*/
-                file_info.m_file_time = (new Date((response.filelist[i].mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
+                file_info.m_file_time = (new Date((response.filelist[i].server_mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
 
                 /*文件大小处理*/
                 if (response.filelist[i].size < 1024) {
@@ -362,12 +372,14 @@ ipcRenderer.on('file-list', (event, data) => {
                 file_info.m_file_path = response.filelist[i].path;
 
                 /*文件fid*/
-                file_info.m_file_fid = response.filelist[i].fid;
+                file_info.m_file_fid = response.filelist[i].fs_id;
 
                 file_info_list.push(file_info);
-                vm.test_ = file_info;
             }
             vm.file_list_ = file_info_list;
+            if(0 == vm.file_list_.length){
+                Notify("这是个空文件夹", "normal");
+            }
         }
     }
     else {
@@ -377,7 +389,6 @@ ipcRenderer.on('file-list', (event, data) => {
 
 ipcRenderer.on('dlink-list', (event, data) => {
     const response = JSON.parse(data);
-    console.log(response);
     if ("true" == response.result) {
         for (var i = 0; i < response.dlinklist.length; i++) {
             let dlink_info = {
@@ -420,7 +431,6 @@ const options = {
 function handleRedirect(response, item) {
     if (response.statusCode === 302) {
         const redirectUrl = response.headers.location;
-        console.log(`Redirecting to: ${redirectUrl}`);
         http.get(redirectUrl, options, (response) => {
             handleRedirect(response, item);
         }).on('error', (err) => {
@@ -430,7 +440,6 @@ function handleRedirect(response, item) {
         const file = fs.createWriteStream("./download/" + item.m_file_name);
         let downloadedBytes = 0;
         const totalBytes = parseInt(response.headers['content-length'], 10);
-        console.log("total: " + totalBytes);
         response.pipe(file);
         response.on('data', (chunk) => {
             downloadedBytes += chunk.length;
@@ -445,11 +454,9 @@ function handleRedirect(response, item) {
 }
 
 function download(item) {
-    console.log(item.m_file_name.length);
     let message = item.m_file_name.length > 20 ? (item.m_file_name.substring(0, 10) + "...") : item.m_file_name;
     Notify("文件 " + message + " 已开始下载", "normal")
     item.m_file_status = "下载中";
-    console.log(item.m_file_dlink);
     https.get(item.m_file_dlink, options, (response) => {
         handleRedirect(response, item);
     }).on('error', (err) => {
@@ -483,3 +490,5 @@ function Notify(message, type) {
 
     }, 4000);
 }
+
+ipcRenderer.invoke('get-user-info');

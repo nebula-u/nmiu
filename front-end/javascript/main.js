@@ -440,6 +440,9 @@ function handleRedirect(response, item) {
             console.error(err);
         });
     } else {
+        if (!fs.existsSync("./download")) {        
+            fs.mkdirSync("./download", { recursive: true });
+        }
         const file = fs.createWriteStream("./download/" + item.m_file_name);
         let downloadedBytes = 0;
         const totalBytes = parseInt(response.headers['content-length'], 10);

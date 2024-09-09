@@ -23,11 +23,12 @@ var ipcPanUserInfo = {
 
 var ipcFileList = {
     result: "",
-    filelist: "",
+    filelist: [],
 }
 
 var ipcDLinkList = {
     result: "",
+    access_token: "",
     dlinklist: "",
 }
 

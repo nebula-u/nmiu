@@ -78,7 +78,7 @@ function BaiDuGetFileList(request_path) {
             data += chunk;
         });
 
-        response.on('end', () => {
+        response.on('end', () => {            
             is.SendFileList(data);
         });
     }).on('error', (err) => {
@@ -86,8 +86,26 @@ function BaiDuGetFileList(request_path) {
     });
 }
 
-function BaiDuGetFileDlink() {
+function DownloadFile(fid) {
+    const url = "https://pan.baidu.com/rest/2.0/xpan/multimedia?method=filemetas&access_token=" + glb.user_data.access_token + "&fsids=%5B" + fid + "%5D&thumb=1&dlink=1&extra=1&needmedia=1&detail=1";
+    const options = {
+        headers: {
+            'User-Agent': 'pan.baidu.com'
+        }
+    }
+    https.get(url, options, (response) => {
+        let data = '';
 
+        response.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        response.on('end', () => {
+            is.SendDlink(data);
+        });
+    }).on('error', (err) => {
+        console.error('请求遇到问题:', err.message);
+    });
 }
 
 module.exports = {
@@ -95,5 +113,5 @@ module.exports = {
     BaiDuAuthQrcodeRequest,
     BaiDuAuthStatusConfirm,
     BaiDuGetFileList,
-    BaiDuGetFileDlink
+    DownloadFile
 }

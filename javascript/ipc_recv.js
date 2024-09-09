@@ -19,8 +19,8 @@ function IpcMainHandle() {
         pr.BaiDuGetFileList(requestPath);
     });
     
-    ipcMain.handle('get-file-dlink', (event, fid) => {
-        
+    ipcMain.handle('download-file', (event, fid) => {
+        pr.DownloadFile(fid);
     });
     
     ipcMain.handle('create-auth-window', cw.createAuthWindow);

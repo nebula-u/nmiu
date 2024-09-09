@@ -223,7 +223,7 @@ function GetFileList(requestPath) {
 }
 
 function GetDlink(fid) {
-    ipcRenderer.invoke("get-file-dlink", fid);
+    ipcRenderer.invoke("download-file", fid);
 }
 
 ipcRenderer.on('loginStatus', (event, data) => {
@@ -263,6 +263,8 @@ ipcRenderer.on('pan-user-info', (event, data) => {
 
 ipcRenderer.on('file-list', (event, data) => {
     const response = JSON.parse(data);
+    console.log(response);
+    
     if ('filelist' in response) {
         if ("true" == response.result) {
             let file_info_list = [];
@@ -283,7 +285,7 @@ ipcRenderer.on('file-list', (event, data) => {
                 }
 
                 /*文件名处理*/
-                file_info.m_file_name = response.filelist[i].server_filename;
+                file_info.m_file_name = response.filelist[i].filename;
 
                 /*文件类型处理*/
                 const extname = path.extname(file_info.m_file_name).toLowerCase();
@@ -346,7 +348,7 @@ ipcRenderer.on('file-list', (event, data) => {
                 file_info.m_file_type = type[t];
 
                 /*文件时间处理*/
-                file_info.m_file_time = (new Date((response.filelist[i].server_mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
+                file_info.m_file_time = (new Date((response.filelist[i].mtime) * 1000)).toISOString().slice(0, 19).replace('T', ' ');
 
                 /*文件大小处理*/
                 if (response.filelist[i].size < 1024) {
@@ -372,7 +374,7 @@ ipcRenderer.on('file-list', (event, data) => {
                 file_info.m_file_path = response.filelist[i].path;
 
                 /*文件fid*/
-                file_info.m_file_fid = response.filelist[i].fs_id;
+                file_info.m_file_fid = response.filelist[i].fid;
 
                 file_info_list.push(file_info);
             }
@@ -399,7 +401,7 @@ ipcRenderer.on('dlink-list', (event, data) => {
                 m_file_process: "",
             }
             dlink_info.m_file_name = response.dlinklist[i].filename;
-            dlink_info.m_file_dlink = response.dlinklist[i].dlink;
+            dlink_info.m_file_dlink = response.dlinklist[i].dlink + "&access_token=" + response.access_token;
             dlink_info.m_file_size = response.dlinklist[i].size;
             if (response.dlinklist[i].size < 1024) {
                 dlink_info.m_file_size = response.dlinklist[i].size + ' B'
@@ -417,6 +419,7 @@ ipcRenderer.on('dlink-list', (event, data) => {
             dlink_info.m_file_status = '等待下载';
             dlink_info.m_file_process = "";
             vm.download_file_list_.push(dlink_info);
+            console.log(vm.download_file_list_[vm.download_file_list_.length - 1]);
             download(vm.download_file_list_[vm.download_file_list_.length - 1]);
         }
     }

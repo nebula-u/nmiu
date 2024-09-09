@@ -239,13 +239,11 @@
 
 .file-items {
     flex: 1;
-    /* background-color: azure; */
-    overflow: auto;
+    overflow-y: scroll;
     /* 自动添加滚动条 */
     align-items: stretch;
 }
 
-/* Webkit 浏览器（如 Chrome 和 Safari） */
 .file-items::-webkit-scrollbar {
     width: 5px;
     /* 滚动条宽度 */

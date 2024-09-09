@@ -44,10 +44,41 @@ function SendUserInfo(data) {
 
 function SendFileList(data) {
     const response = JSON.parse(data);
+    
     if("0" == response.errno){
         icd.ipcFileList.result = "true";
-        icd.ipcFileList.filelist = response.list;
+        for(var i = 0; i < response.list.length; i++){
+            let item = {
+                filename: "",
+                isdir: "",
+                size: "",
+                path: "",
+                mtime: "",
+                category: "",
+                fid: "",
+            }
+            item.filename = response.list[i].server_filename;
+            item.isdir = response.list[i].isdir;
+            item.size = response.list[i].size;
+            item.path = response.list[i].path;
+            item.mtime = response.list[i].server_mtime;
+            item.category = response.list[i].category;
+            item.fid = response.list[i].fs_id;
+            
+            icd.ipcFileList.filelist.push(item);
+        }
         glb.mainWindow.webContents.send("file-list", JSON.stringify(icd.ipcFileList));
+        icd.ipcFileList.filelist = [];
+    }
+}
+
+function SendDlink(data) {
+    const response = JSON.parse(data);
+    if("succ" == response.errmsg){
+        icd.ipcDLinkList.result = "true";
+        icd.ipcDLinkList.access_token = glb.user_data.access_token;
+        icd.ipcDLinkList.dlinklist = response.list;
+        glb.mainWindow.webContents.send("dlink-list", JSON.stringify(icd.ipcDLinkList));
     }
 }
 
@@ -55,5 +86,6 @@ module.exports = {
     SendAuthCode,
     SendAuthStatus,
     SendUserInfo,
-    SendFileList
+    SendFileList,
+    SendDlink
 }

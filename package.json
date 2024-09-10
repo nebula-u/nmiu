@@ -5,7 +5,8 @@
   "main": "start.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager ./ npan --win --arch=x64 --out ./dist"
+    "build-win": "electron-packager ./ npan --win --arch=x64 --out ./dist",
+    "build-linux": "electron-packager ./ npan --platform=linux --arch=x64 --out ./dist"
   },
   "author": "nebulau",
   "license": "ISC"

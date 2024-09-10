@@ -6,7 +6,7 @@ function createAuthWindow() {
         show: false,
         width: 300,
         height: 400,
-        // resizable: false,
+        resizable: false,
         parent: global.mainWindow,
         modal: true,
         frame: false,
@@ -14,6 +14,7 @@ function createAuthWindow() {
             nodeIntegration: true,
             enableRemoteModule: true,
             contextIsolation: false,
+            devTools: false,
         }
     });
     authWin.once('ready-to-show', () => {
@@ -28,11 +29,14 @@ function createMainWindow() {
         show: false,
         width: 1000,
         height: 700,
+        minWidth: 800,
+        minHeight: 600,
         frame: false,
         webPreferences:{
             nodeIntegration: true,
             enableRemoteModule: true,
             contextIsolation: false,
+            devTools: false,
         }
     });
     mainWin.once('ready-to-show', () => {

@@ -70,22 +70,6 @@ const app = createApp({
         }
     },
     methods: {
-        closeWin() {
-            const mainWin = remote.getCurrentWindow();
-            mainWin.close();
-        },
-
-        OpenUserInfo_() {
-            // 已登录，打开用户信息
-            if (isLoggedIn) {
-
-            }
-            // 未登录，打开登录窗口
-            else {
-                createLoginWindow();
-            }
-        },
-
         OpenAuthInfo_() {
             // 已授权，打授权信息
             if (isAuthed) {
@@ -107,8 +91,6 @@ const app = createApp({
             }
             else {
                 Notify("暂不支持打开文件，请下载后查看", "error");
-                // this.netdisk_current_display_ = "netdisk-fileinfo";
-                // GetDlink(fid);
             }
         },
         NetdiskDisplay() {
@@ -120,22 +102,15 @@ const app = createApp({
         },
 
         minWin() {
-            const mainWin = remote.getCurrentWindow();
-            mainWin.minimize();
+            MinimizeMainWindow();
         },
 
         maxWin() {
-            const mainWin = remote.getCurrentWindow();
-            if (mainWin.isMaximized()) {
-                mainWin.unmaximize();
-            } else {
-                mainWin.maximize();
-            }
+            MaxOrUnmaxMainWindow();
         },
 
         closeWin() {
-            const mainWin = remote.getCurrentWindow();
-            mainWin.close();
+            CloseMainWindow();
         },
 
         GoBack() {
@@ -217,6 +192,18 @@ function createAuthWindow() {
     ipcRenderer.invoke('create-auth-window');
 }
 
+function CloseMainWindow() {
+    ipcRenderer.invoke("close-main-window");
+}
+
+function MaxOrUnmaxMainWindow() {
+    ipcRenderer.invoke("max-orunmax-main-window");
+}
+
+function MinimizeMainWindow() {
+    ipcRenderer.invoke("minimize-main-window");
+}
+
 function GetFileList(requestPath) {
     ipcRenderer.invoke("get-file-list", requestPath);
     vm.file_list_ = [];
@@ -225,17 +212,6 @@ function GetFileList(requestPath) {
 function GetDlink(fid) {
     ipcRenderer.invoke("download-file", fid);
 }
-
-ipcRenderer.on('loginStatus', (event, data) => {
-    const response = JSON.parse(data);
-    if ("success" == response.result) {
-        vm.uname_ = response.username;
-        isLoggedIn = true;
-    }
-    else {
-        vm.uname_ = "登录";
-    }
-});
 
 // 接收网盘的授权状态
 ipcRenderer.on('pan-auth-result', (event, data) => {

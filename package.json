@@ -4,7 +4,8 @@
   "description": "桌面端",
   "main": "start.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager ./ npan --win --arch=x64 --out ./dist"
   },
   "author": "nebulau",
   "license": "ISC"

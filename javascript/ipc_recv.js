@@ -1,6 +1,7 @@
 const { ipcMain }   = require('electron');
 const cw            = require("./create_windows");
 const pr            = require('./pan_requests');
+const glb = require("./global");
 
 function IpcMainHandle() {
     ipcMain.handle('get-user-info', (event) => {        
@@ -24,6 +25,27 @@ function IpcMainHandle() {
     });
     
     ipcMain.handle('create-auth-window', cw.createAuthWindow);
+
+    ipcMain.handle("close-main-window", () => {
+        glb.mainWindow.close();
+    });
+
+    ipcMain.handle("close-auth-window", () => {
+        glb.authWindow.close();
+    });
+
+    ipcMain.handle("max-orunmax-main-window", () => {
+        if(glb.mainWindow.isMaximized()){
+            glb.mainWindow.unmaximize();
+        }
+        else{
+            glb.mainWindow.maximize();
+        }
+    });
+
+    ipcMain.handle("minimize-main-window", () => {
+        glb.mainWindow.minimize();
+    })
 }
 
 module.exports = {

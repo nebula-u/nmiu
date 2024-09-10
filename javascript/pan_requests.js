@@ -65,7 +65,7 @@ function BaiDuAuthStatusConfirm() {
 }
 
 function BaiDuGetFileList(request_path) {
-    url = "https://pan.baidu.com/rest/2.0/xpan/file?method=list&dir=" + request_path + "&order=time&start=0&limit=100&web=web&folder=0&access_token=" + glb.user_data.access_token + "&desc=1"
+    url = "https://pan.baidu.com/rest/2.0/xpan/file?method=list&dir=" + request_path + "&order=time&start=0&limit=1000&web=web&folder=0&access_token=" + glb.user_data.access_token + "&desc=1"
     const options = {
         headers: {
             'User-Agent': 'pan.baidu.com'

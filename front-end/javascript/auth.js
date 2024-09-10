@@ -12,8 +12,7 @@ const app = createApp({
     methods:{
         closeWin(){
             clearInterval(getAuthLoginStatusTimer);
-            const authWin = remote.getCurrentWindow();
-            authWin.close();
+            CloseAuthWindow();
         },
 
         GetAuthLoginStatus() {
@@ -23,6 +22,12 @@ const app = createApp({
 });
 
 const vm = app.mount("#app");
+
+
+function CloseAuthWindow(){
+    ipcRenderer.invoke("close-auth-window");
+}
+
 
 ipcRenderer.invoke('auth-qrcode-request');
 
@@ -45,10 +50,7 @@ ipcRenderer.on('pan-auth-result', (event, data) => {
     {
         vm.imageUrl_ = "../img/QRAuthSuccess.svg";
         setTimeout(() => {
-            remote.getCurrentWindow().close();
+            CloseAuthWindow();
         }, 1000);
-        setTimeout(() => {
-            ipcRenderer.invoke('get-user-info');
-        }, 3000);
     }
 })
